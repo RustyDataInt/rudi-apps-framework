@@ -70,7 +70,7 @@ runtimePrompt <- "$"
 if(isRuntime) observers$runtime <- observeEvent(input$runtime, {
     if(input$runtime){
         runtimeCommand <<- {
-            mdiCommandTarget <- file.path(serverEnv$MDI_DIR, 'mdi')
+            mdiCommandTarget <- file.path(serverEnv$ACTIVE_MDI_DIR, 'mdi')
             developerFlag <- if(serverEnv$IS_DEVELOPER) '-d' else ''
             paste(mdiCommandTarget, developerFlag, pipeline, "shell", "--action", action, "--runtime", runtime, '')
         } 
