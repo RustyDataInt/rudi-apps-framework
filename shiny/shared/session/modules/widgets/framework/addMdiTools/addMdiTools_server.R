@@ -17,7 +17,7 @@ addMdiToolsServer <- function(
 module <- "addMdiTools"
 observers <- list() # for module self-destruction
 githubPrefix <- "https://github.com/"
-suitesConfigFile <- file.path(serverEnv$MDI_DIR, "config", "suites.yml")
+suitesConfigFile <- file.path(serverEnv$ACTIVE_MDI_DIR, "config", "suites.yml")
 suitesYamlPrefix <- "---
 #----------------------------------------------------------------------
 # Tool suites to install

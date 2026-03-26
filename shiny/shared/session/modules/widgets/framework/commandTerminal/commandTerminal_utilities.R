@@ -115,7 +115,7 @@ terminalCommandIntercepts <- list(
     top = "top -bn 1 -u $USER",
     sq = "squeue -u $USER",
     ll = "ls -lh",
-    mdi = file.path(serverEnv$MDI_DIR, "mdi")
+    mdi = file.path(serverEnv$ACTIVE_MDI_DIR, "mdi")
 )
 interceptTerminalCommands <- function(command, ...){
     command <- trimws(command)

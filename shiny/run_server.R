@@ -75,8 +75,23 @@ if(serverEnv$IS_SERVER) { # public web server mode
     # serverEnv$CALLBACK_URL <- paste0("http://127.0.0.1:", serverEnv$SERVER_PORT, "/") # cannot be localhost for endpoint helper page action # nolint
 } 
 
-# set directories (framework runs from 'shared' directory that carries ui.R and server.R)
+# set top-level directories based on whether we are running in a container and in developer mode
 if(!dir.exists(serverEnv$MDI_DIR)) stop(paste('unknown directory:', serverEnv$MDI_DIR))
+serverEnv$MDI_IS_CONTAINER <- !is.null(serverEnv$MDI_IS_CONTAINER) && serverEnv$MDI_IS_CONTAINER == "TRUE"
+if(!serverEnv$MDI_IS_CONTAINER){
+    serverEnv$ACTIVE_MDI_DIR <- serverEnv$MDI_DIR # values already set for containers
+    serverEnv$STATIC_MDI_DIR <- serverEnv$MDI_DIR
+}
+serverEnv$APPS_FRAMEWORK_DIR <- if(serverEnv$IS_DEVELOPER){
+    file.path(serverEnv$ACTIVE_MDI_DIR, 'frameworks', 'developer-forks', 'mdi-apps-framework')
+} else { # use active directory even if not developer since might be more recent than a container static code copy
+    file.path(serverEnv$ACTIVE_MDI_DIR, 'frameworks', 'definitive',      'mdi-apps-framework')
+}
+if(!dir.exists(serverEnv$APPS_FRAMEWORK_DIR)){ # in case developer doesn't have a fork of mdi-apps-framework
+    serverEnv$APPS_FRAMEWORK_DIR <- file.path(serverEnv$ACTIVE_MDI_DIR, 'frameworks', 'definitive', 'mdi-apps-framework')
+}
+
+# set directories (framework runs from 'shared' directory that carries ui.R and server.R)
 setServerDir <- function(name, parentDir, ..., check = TRUE, create = FALSE){
     serverEnv[[name]] <<- file.path(parentDir, ...)
     if(check  && !dir.exists(serverEnv[[name]])) stop(paste('missing directory:', serverEnv[[name]]))
@@ -84,6 +99,9 @@ setServerDir <- function(name, parentDir, ..., check = TRUE, create = FALSE){
 }
 setServerDir('SHINY_DIR',   serverEnv$APPS_FRAMEWORK_DIR, 'shiny')
 setServerDir('SHARED_DIR',  serverEnv$SHINY_DIR, 'shared')
+setServerDir('SESSIONS_DIR',serverEnv$ACTIVE_MDI_DIR, 'sessions')
+setServerDir('FRAMEWORKS_DIR',serverEnv$ACTIVE_MDI_DIR, 'frameworks')
+setServerDir('SUITES_DIR',  serverEnv$ACTIVE_MDI_DIR, 'suites')
 setServerDir('STORR_DIR',   serverEnv$DATA_DIR, 'storr',   check = FALSE, create = TRUE)
 setServerDir('CACHE_DIR',   serverEnv$DATA_DIR, 'cache',   check = FALSE, create = TRUE)
 setServerDir('UPLOADS_DIR', serverEnv$DATA_DIR, 'uploads', check = FALSE, create = TRUE)
@@ -94,7 +112,6 @@ getLibPath <- function(lib) if(!is.null(lib) && lib != "") lib else NULL
 .libPaths(c(
     serverEnv$LIBRARY_DIR_SHORT,
     serverEnv$LIBRARY_DIR,
-    getLibPath(serverEnv$STATIC_R_LIBRARY),
     getLibPath(serverEnv$MDI_SYSTEM_R_LIBRARY)
 ))
 if(serverEnv$DEBUG) message(paste(".libPaths =", .libPaths(), collapse = "\n"))
@@ -118,7 +135,7 @@ while(TRUE){
 #----------------------------------------------------------------------
 
 # load the Stage 2 apps config
-serverConfig <- read_yaml(file.path(serverEnv$MDI_DIR, 'config', 'stage2-apps.yml'))
+serverConfig <- read_yaml(file.path(serverEnv$ACTIVE_MDI_DIR, 'config', 'stage2-apps.yml'))
 if(is.null(serverConfig$site_name)) serverConfig$site_name <- 'MDI'
 
 # determine whether the Pipeline Runner app is allowed

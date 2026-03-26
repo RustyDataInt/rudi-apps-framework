@@ -18,7 +18,7 @@ configFileEditorServer <- function(id, parentId) {
 editorId <- paste(parentNs(id), "editor", sep = "-") # the div that contains the Ace editor
 editorContentsId <- paste("editor", "contents", sep = "-") # for JS-Shiny communication
 editorIsInitialized <- reactiveVal(FALSE)
-baseDir <- file.path(serverEnv$MDI_DIR, 'config')
+baseDir <- file.path(serverEnv$ACTIVE_MDI_DIR, 'config')
 configFiles <- reactiveVal(NULL) # character vector of config file names (not paths)
 diskFileContents <- reactiveValues() # as found on disk when first loaded
 currentFileContents <- reactiveValues() # as potentially edited by the user

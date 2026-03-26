@@ -223,7 +223,7 @@ output$file <- renderText({
     action <- pendingFileAction()
     directory <- directory()
     path <- if(is.null(directory)) tabs()[active == TRUE, path] else directory
-    path <- gsub(paste0(serverEnv$MDI_DIR, '/'), '', path)
+    path <- gsub(paste0(serverEnv$ACTIVE_MDI_DIR, '/'), '', path)
     shinyjs::hide(selector = '.ace-file-option')
     if(state == states$waiting){
         shinyjs::show("fileMenu")
@@ -262,7 +262,6 @@ queueFileAction <- function(action){
             else if(any(tabs$active)) tabs[active == TRUE, path]
             else input$baseDir
     req(path)
-#############33
     if(FALSE && startsWith(path, serverEnv$APPS_FRAMEWORK_DIR)){
         promptFileAction(list(
             message = " !!! action cannot be applied to framework files !!!"
@@ -321,7 +320,7 @@ observers$movePath <- observeEvent(input$movePath, {
         do = function(oldPath){
             newPath <<- trimws(input$pathEdit)
             if(newPath == "") return()
-            newPath <<- file.path(serverEnv$MDI_DIR, newPath)
+            newPath <<- file.path(serverEnv$ACTIVE_MDI_DIR, newPath)
             dir <- dirname(newPath)
             if(!dir.exists(dir)) dir.create(dir, recursive = TRUE)
             if(isFile){
