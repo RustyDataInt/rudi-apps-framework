@@ -210,6 +210,7 @@ invisible(unlink(
 ))
 
 # initialize git repository tracking
+message("!!! run_server.R: initialize git repository tracking !!!")
 source(file.path('global', 'utilities', 'git.R'))
 frameworkDir_ <- R.utils::getAbsolutePath(serverEnv$APPS_FRAMEWORK_DIR)
 gitFrameworkStatus <- list(
