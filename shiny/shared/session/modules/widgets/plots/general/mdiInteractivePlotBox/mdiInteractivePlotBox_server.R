@@ -141,8 +141,8 @@ setMargins <- function() par(mar = c(
     settings$get("Plot_Frame", "Top_Margin"), 
     settings$get("Plot_Frame", "Right_Margin")
 ))
-initializePng <- function(mar = NULL){
-    dpi           <- 96 # resolution optimized for screen display
+initializePng <- function(mar = NULL, dpi = 96){
+    # dpi           <- 96 # resolution optimized for screen display
     width_inches  <- settings$get("Plot_Frame","Width_Inches")
     height_inches <- settings$get("Plot_Frame","Height_Inches")
     width_pixels  <- width_inches  * dpi
