@@ -18,14 +18,14 @@ $(document).ready(function() {
 /*  ------------------------------------------------------------------------
     capture external web links into desktop app
     ------------------------------------------------------------------------*/ 
-    if(window.mdiElectron && window.mdiElectron.frameworkToElectron){
+    if(window.mdiElectron && window.mdiElectron.appToElectron){
         $(document).on("click", "a", function(event){
             const linkTarget = $(event.target).attr('target');
             if(linkTarget){ // all external links are expected to set a target
                 const url = $(event.target).attr('href');
                 if(!url.includes("/download/")){ // don't mask Save Bookmark
                     event.preventDefault(); // TODO: this is preventing Save Bookmark from functioning
-                    window.mdiElectron.frameworkToElectron("externalLink", {
+                    window.mdiElectron.appToElectron("externalLink", {
                         url: url,
                         target: linkTarget
                     });
@@ -411,7 +411,7 @@ let scrollCommandTerminalResults = function(prefix){ // keep the results view pa
 /*  ------------------------------------------------------------------------
     inter-process communcation (IPC) from mdi-apps-framework to the optional mdi-apps-launcher wrapper
     ------------------------------------------------------------------------*/
-Shiny.addCustomMessageHandler('frameworkToElectron', function(message) {
-    if(window.mdiElectron && window.mdiElectron.frameworkToElectron) 
-        window.mdiElectron.frameworkToElectron(message.type, message.data);
+Shiny.addCustomMessageHandler('appToElectron', function(message) {
+    if(window.mdiElectron && window.mdiElectron.appToElectron) 
+        window.mdiElectron.appToElectron(message.type, message.data);
 });

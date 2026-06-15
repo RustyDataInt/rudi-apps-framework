@@ -1,9 +1,9 @@
 # MDI Apps Framework
 
-The [Michigan Data Interface](https://midataint.github.io/) (MDI) 
-is a framework for developing, installing and running 
-Stage 1 HPC **pipelines** and Stage 2 interactive web applications 
-(i.e., **apps**) in a standardized design interface.
+The [Rusty Data Interface](https://rustydataint.github.io/) (RuDI) 
+is a standardized framework for developing and running HPC data 
+analysis **pipelines** and interactive visualization **apps**
+with a Rust-first mindset.
 
 This is the repository for the **MDI apps framework**. 
 It contains R Shiny code that

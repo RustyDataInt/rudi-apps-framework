@@ -36,7 +36,7 @@ observeEvent(input$show, {
     if(is.null(serverEnv$MDI_IS_ELECTRON)){ # open in standard web browser tab
         runjs(paste(open, blur))
     } else { # open in electron tab
-        session$sendCustomMessage("frameworkToElectron", list(
+        session$sendCustomMessage("appToElectron", list(
             type = "showDocumentation", 
             data = url
         ))
