@@ -5,23 +5,28 @@ is a standardized framework for developing and running HPC data
 analysis **pipelines** and interactive visualization **apps**
 with a Rust-first mindset.
 
-This is the repository for the **MDI apps framework**. 
-It contains R Shiny code that
-creates the modular graphical user interface via
-a web server and runs individual data analysis apps. 
-The framework thus provides a common access point to many data apps.
+This is the repository for the **RuDI apps framework**. It carries 
+Rust Dioxus components and utilities that help quickly build modular 
+RuDI apps.
 
-The apps framework does not encode the data analysis apps themselves, 
-which are found in other code repositories called 'tool suites'
-created from our suite repository template:
+The apps framework does not encode data analysis apps themselves, 
+which are found in other tool suite repositories created from our 
+suite repository template:
 
-- tool suite template: <https://github.com/MiDataInt/mdi-suite-template>
+- tool suite template: <https://github.com/RustyDataInt/rudi-suite-template>
 
-## Installation and use
+## Usage
 
-This repository is not used directly. Instead, it is cloned
-and managed by the MDI installer and manager utilities found here:
+Imported the single crate in this repository into RuDI Dioxus app
+and library crates as:
 
-- MDI Desktop app: <https://github.com/MiDataInt/mdi-desktop-app>
-- MDI installation script: <https://github.com/MiDataInt/mdi>
-- MDI manager R package: <https://github.com/MiDataInt/mdi-manager>
+```toml
+# Cargo.toml
+[dependencies]
+rudi_apps_framework = { git = "https://github.com/RustyDataInt/rudi-apps-framework", branch = "main" }
+```
+
+```rust
+// xxxx.rs
+use rudi_apps_framework::prelude::*;
+```

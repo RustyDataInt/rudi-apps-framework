@@ -1,9 +1,8 @@
-# exclude R and RStudio temporary or local files
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-Rplots.pdf
+# exclude Rust build artifacts
+**/crates/target
+**/crates/Cargo.lock
+**/crates/*/target
+**/crates/*/Cargo.lock
 
 # exclude development artifacts and temporary files
 unused/

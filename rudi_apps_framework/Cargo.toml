@@ -1,0 +1,41 @@
+[package]
+name = "rudi_apps_framework"
+authors = ["Thomas E. Wilson"]
+edition = "2021"
+
+[dependencies]
+
+# dioxus web app framework
+dioxus = { version = "0.7", features = ["fullstack"] }
+dioxus-icons = { version = "0.1.0", default-features = false }
+dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version = "0.0.1", default-features = false, features = ["router"] }
+
+# server-only async data transfer
+tokio = { version = "1", features = ["full"], optional = true}
+
+# web-only wasm-javascript bindings
+wasm-bindgen = { version = "0.2", optional = true }
+wasm-bindgen-futures = { version = "0.4", optional = true }
+
+# image processing
+base64 = "0.22"
+image = { version = "0.25", default-features = false, features = ["png"] } 
+
+# data transport support
+toml = "1.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+server_fn = "0.8"
+
+# debug logging
+log = "0.4"
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+env_logger = "0.11"
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_log = "1.0"
+
+[features]
+default = ["web"]
+desktop = ["dioxus/desktop"]
+web     = ["dioxus/web", "dep:wasm-bindgen", "dep:wasm-bindgen-futures"]
+server  = ["dioxus/server", "dep:tokio"]
