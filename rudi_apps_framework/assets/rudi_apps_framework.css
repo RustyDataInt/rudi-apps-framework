@@ -1,0 +1,10 @@
+
+/* grid page layout */
+.rudi-header-layout {
+    display: grid;
+    grid-template-rows: 50px 1fr;
+}
+.rudi-sidebar-layout {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+}

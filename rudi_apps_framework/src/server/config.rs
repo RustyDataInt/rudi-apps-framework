@@ -1,5 +1,5 @@
-//! Suite, App, and AppStep configuration structures, that match 
-//! the expected format of an app's `app_config.toml` files.
+//! Suite, App, and AppStep configuration structures, that match the
+//! expected format of `suite_config.toml` and `app_config.toml` files.
 
 // imports
 use std::collections::HashMap;
@@ -43,18 +43,19 @@ pub struct AppConfig {
     pub name:  String,
     pub label: String,
     pub description: String,
-    pub package_types: HashMap<String, Vec<String>>,
+    pub package_types: HashMap<String, Vec<String>>, // values are required content file types
     pub app_steps: Vec<AppStepConfig>,
 }
 
 /// The terminal configuration object that defines the Dioxus 
-/// component used by an app step. `build.rs` uses the component 
-/// string name to route to the appropriate component. The 
-/// component must be re-exported in the app's `lib.rs` file.
+/// component used by an app step. The component must be 
+/// re-exported in the app's `lib.rs` file.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppStepConfig {
+    #[serde(default)]
+    pub order:       u8,
     pub name:        String,
     pub label:       String,
-    pub component:   String,
+    pub component:   String, // e.g. "MyAppStepComponent"
     pub description: String,
 }

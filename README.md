@@ -17,16 +17,16 @@ suite repository template:
 
 ## Usage
 
-Imported the single crate in this repository into RuDI Dioxus app
+Import the single crate in this repository into RuDI Dioxus app
 and library crates as:
 
 ```toml
 # Cargo.toml
 [dependencies]
-rudi_apps_framework = { git = "https://github.com/RustyDataInt/rudi-apps-framework", branch = "main" }
+rudi = { package = "rudi_apps_framework", git = "https://github.com/RustyDataInt/rudi-apps-framework" }
 ```
 
 ```rust
-// xxxx.rs
-use rudi_apps_framework::prelude::*;
+// src/any.rs
+use rudi::prelude::*;
 ```
