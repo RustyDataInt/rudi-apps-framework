@@ -52,7 +52,7 @@ executeLoadRequest <- function(loadRequest){
     updateSpinnerMessage(session, "loading dependencies")
     gitStatusData$dependencies <- getSuiteDependencies(gitStatusData$suite$dir)
     abortDependency <- function(repoDir){
-        releaseMdiGitLock(repoDir)
+        releaseRudiGitLock(repoDir)
         NULL
     }
     for(i in seq_along(gitStatusData$dependencies)){
@@ -60,7 +60,7 @@ executeLoadRequest <- function(loadRequest){
         gitStatusData$dependencies[[i]]$loaded <- FALSE # a flag to check to see if an optional dependency was (not) found
         if(!is.null(x$version)){
             waitForRepoLock(repoDir = x$dir)
-            setMdiGitLock(x$dir)
+            setRudiGitLock(x$dir)
             git2r::checkout(x$dir, x$version, create = FALSE)            
         }
         dirs <- parseExternalSuiteDirs(x$name)
@@ -74,7 +74,7 @@ executeLoadRequest <- function(loadRequest){
         if(!loadSuccess) return( abortDependency(x$dir) )  
         gitStatusData$dependencies[[i]]$versions <- getAllVersions(x$dir)
         gitStatusData$dependencies[[i]]$head <- getGitHead(x)        
-        if(!is.null(x$version)) releaseMdiGitLock(x$dir)
+        if(!is.null(x$version)) releaseRudiGitLock(x$dir)
         gitStatusData$dependencies[[i]]$loaded <- TRUE
     }
 

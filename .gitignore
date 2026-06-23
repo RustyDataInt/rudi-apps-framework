@@ -1,5 +1,5 @@
 # exclude Rust build artifacts
-/rudi_apps_framework/target
+/rudi_apps/target
 **/*.rs.bk
 
 # exclude development artifacts and temporary files

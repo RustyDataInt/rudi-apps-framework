@@ -1,5 +1,5 @@
 [package]
-name = "rudi_apps_framework"
+name = "rudi_apps"
 authors = ["Thomas E. Wilson"]
 edition = "2021"
 

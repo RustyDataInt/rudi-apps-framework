@@ -39,7 +39,7 @@ getGitHeadDisplay <- function(head) {
 # set and clear MDI locks on git repositories
 # use same format as mdi-pipelines-framework so locks are shared between Stages 1 and 2
 # locks are _not_ fork-specific, i.e., a lock applies equally to definitive and developer-forks
-getMdiLockFile <- function(repoDir){
+getRudiLockFile <- function(repoDir){
     parts <- rev(strsplit(repoDir, '/')[[1]])
     repo <- parts[1]
     fork <- parts[2] # definitive or developer-forks
@@ -49,7 +49,7 @@ getMdiLockFile <- function(repoDir){
     file.path(mdiDir, type, lockFile)
 }
 waitForRepoLock <- function(lockFile = NULL, repoDir = NULL){
-    if(is.null(lockFile)) lockFile <- getMdiLockFile(repoDir)
+    if(is.null(lockFile)) lockFile <- getRudiLockFile(repoDir)
     if(!file.exists(lockFile)) return()  
     message(paste("waiting for lock to clear:", lockFile))  
     maxLockWaitSec <- 30
@@ -68,13 +68,13 @@ waitForRepoLock <- function(lockFile = NULL, repoDir = NULL){
         stop('no')
     }
 }
-setMdiGitLock <- Vectorize(function(repoDir){ # expect that caller has used waitForRepoLock as needed
-    lockFile <- getMdiLockFile(repoDir)
+setRudiGitLock <- Vectorize(function(repoDir){ # expect that caller has used waitForRepoLock as needed
+    lockFile <- getRudiLockFile(repoDir)
     waitForRepoLock(lockFile)
     file.create(lockFile)
 })
-releaseMdiGitLock <- Vectorize(function(repoDir){
-    lockFile <- getMdiLockFile(repoDir)
+releaseRudiGitLock <- Vectorize(function(repoDir){
+    lockFile <- getRudiLockFile(repoDir)
     if(file.exists(lockFile)) unlink(lockFile)
 })
 

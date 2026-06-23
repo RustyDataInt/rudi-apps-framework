@@ -23,7 +23,7 @@ and library crates as:
 ```toml
 # Cargo.toml
 [dependencies]
-rudi = { package = "rudi_apps_framework", git = "https://github.com/RustyDataInt/rudi-apps-framework" }
+rudi_apps = { git = "https://github.com/RustyDataInt/rudi-apps-framework" }
 ```
 
 ```rust

@@ -5,15 +5,15 @@
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
-/// Collect server configurations across multiple tool suites. The 
-/// different suites may be part of a multi-suite installation, 
-/// or result from a single-suite installation that declares a 
-/// suite dependency.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InstallationConfig {
-    pub single_suite_name: Option<String>,
-    pub server_configs: HashMap<String, ServerConfig>,
-}
+// /// Collect server configurations across multiple tool suites. The 
+// /// different suites may be part of a multi-suite installation, 
+// /// or result from a single-suite installation that declares a 
+// /// suite dependency.
+// #[derive(Debug, Clone, Serialize, Deserialize)]
+// pub struct InstallationConfig {
+//     pub single_suite_name: Option<String>,
+//     pub server_configs: HashMap<String, ServerConfig>,
+// }
 
 /// Collect all configurations for one tool suite.
 /// Instantiated by `build.rs` for `server::main.rs`.
