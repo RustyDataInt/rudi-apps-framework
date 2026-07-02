@@ -31,9 +31,10 @@ pub use state::*;
 pub use ui::*;
 
 // assets
-pub static RUDI_LOGO_ICO:      Asset = asset!("/assets/favicon.ico");
-pub static RUDI_FRAMEWORK_CSS: Asset = asset!("/assets/rudi_apps.css");
-pub static RUDI_FRAMEWORK_JS:  Asset = asset!("/assets/rudi_apps.js");
+pub static RUDI_LOGO_ICO:       Asset = asset!("/assets/favicon.ico");
+pub static RUDI_FRAMEWORK_CSS:  Asset = asset!("/assets/rudi_apps.css");
+pub static RUDI_FRAMEWORK_JS:   Asset = asset!("/assets/rudi_apps.js");
+pub static DX_COMPONENTS_THEME: Asset = asset!("/assets/dx-components-theme.css");
 
 /// Build app configurations for server `main.rs`. Called 
 /// by `build.rs` at compile time to read a tool suite's 

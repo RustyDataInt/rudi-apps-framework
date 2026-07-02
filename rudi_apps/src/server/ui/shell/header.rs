@@ -1,0 +1,55 @@
+//! The feedback elements in the top page header.
+
+// imports
+use std::env;
+use dioxus::prelude::*;
+use dioxus_icons::lucide::{Menu, FolderGit2};
+use crate::server::*;
+
+const icon_size: u32 = 24;
+
+/// `ToggleSidebarLink` provides an icon link to toggle the sidebar.
+#[component]
+pub fn ToggleSidebarLink() -> Element {
+    rsx!{
+        button {
+            Menu { size: icon_size }
+        }
+    }
+}
+
+/// `GitVersions` provides an icon link to a modal with repo version metadata.
+#[component]
+pub fn GitVersions() -> Element {
+    rsx!{
+        button {
+            FolderGit2 { size: icon_size }
+        }
+    }
+}
+
+/// `ActiveUser` display the currently logged-in user.
+#[component]
+pub fn ActiveUser() -> Element {
+    let user = env::var("USER")
+        .map(|val| val.to_string())
+        .unwrap_or("USER not set".to_string());
+    rsx!{
+        div { id: "active-user",
+            {user}
+        }
+    }
+}
+
+/// `DataDirectory` display the path the the server data directory.
+#[component]
+pub fn DataDirectory() -> Element {
+    let data_dir = env::var("RUDI_DATA_DIR")
+        .map(|val| val.to_string())
+        .unwrap_or("RUDI_DATA_DIR not set".to_string());
+    rsx!{
+        div { id: "data-directory",
+            {data_dir}
+        }
+    }
+}
