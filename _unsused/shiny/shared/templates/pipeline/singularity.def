@@ -14,7 +14,7 @@ From: ubuntu:20.04
 Stage: build
 # alternatively, update a previous major.minor version of this pipeline's container:
 # Bootstrap: oras
-# From: ghcr.io/GIT_OWNER/SUITE_NAME/PIPELINE_NAME:v0.0
+# From: ghcr.io/GITHUB_OWNER/SUITE_NAME/PIPELINE_NAME:v0.0
 # Stage: build
 
 # install system-level requirements such as libraries and common system utilities
