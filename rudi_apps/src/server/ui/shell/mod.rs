@@ -9,6 +9,9 @@ use dioxus::prelude::*;
 use crate::server::*;
 use header::*;
 
+// constants
+const APP_OVERVIEW_STEP_NAME: &str = "app_overview";
+
 /// `SuiteLabel` is the top-left label for the tool suite.
 #[component]
 pub fn SuiteLabel() -> Element {
@@ -43,21 +46,39 @@ pub fn ServerHeaderContent() -> Element {
 pub fn AppStepChooser() -> Element {
     let server_config = use_context::<ServerConfig>();
     let mut server_state  = use_context::<ServerState>();
+    let has_selected_step = server_state.has_step();
+    let selected_app_step = server_state.get_step().unwrap_or(APP_OVERVIEW_STEP_NAME.to_string());
     let Some(app_name) = server_state.get_app() else { return rsx!{}; };
     let app_steps = &server_config.app_configs[&app_name].app_steps;
-    let app_steps = app_steps.iter().map(|app_step_config| {
-        let app_step_config_name = app_step_config.name.clone();
+    let mut app_step_divs = vec![{
+        let selected_class = if !has_selected_step { 
+            "app-step-link-selected" 
+        } else { "" };
         rsx!{
+                div {
+                class: format!("app-step-link {}", selected_class),
+                key: "{APP_OVERVIEW_STEP_NAME}",
+                onclick: move |_| server_state.set_step(APP_OVERVIEW_STEP_NAME),
+                "{server_config.app_configs[&app_name].label}"
+            }
+        }
+    }];
+    app_steps.iter().for_each(|app_step_config| {
+        let app_step_config_name = app_step_config.name.clone();
+        let selected_class = if selected_app_step == app_step_config_name { 
+            "app-step-link-selected" 
+        } else { "" };
+        app_step_divs.push(rsx!{
             div {
-                class: "app-step-link",
+                class: format!("app-step-link {}", selected_class),
                 key: "{app_step_config.name}",
                 onclick: move |_| server_state.set_step(&app_step_config_name),
                 "{app_step_config.label}"
             }
-        }
+        });
     });
     rsx!{
-        {app_steps}
+        {app_step_divs.iter()}
     }
 }
 
@@ -83,7 +104,7 @@ pub fn AppChooser() -> Element {
         rsx!{
             div { key: "{app_config.name}",
                 DataPackageLoader {}
-                Spacer {}
+                WideSpacer {}
                 div { class: "section-title", "Open an app with no data" }
                 div {
                     class: "app-chooser-row",
@@ -97,4 +118,18 @@ pub fn AppChooser() -> Element {
     rsx!{
         {apps}
     } 
+}
+
+/// Render the app's overview.md as an app step.
+#[component]
+pub fn AppOverview() -> Element {
+    let server_config = use_context::<ServerConfig>();
+    let server_state = use_context::<ServerState>();
+    let app_step_name = server_state.get_step();
+    let Some(app_name) = server_state.get_app() else { return rsx!{}; };
+    rsx!{
+        if app_step_name.is_none() || app_step_name.unwrap() == APP_OVERVIEW_STEP_NAME {
+            Markdown { markdown: server_config.app_overviews[&app_name].clone() }
+        }
+    }
 }

@@ -20,6 +20,7 @@ pub mod ui;
 
 // imports
 use std::path::Path;
+use std::fs::File;
 use std::collections::HashMap;
 use std::fs;
 use std::io::Write;
@@ -87,21 +88,22 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
                 println!("cargo:rerun-if-changed={}", app_config_file.display());
 
                 // add the app step components for each matchable app
-                let app_step_display = r#"{ "display: block;" } else { "display: none;" }"#;
-                let mut app_step_order = 1;
                 writeln!(app_matcher_file, "    Some(app_name) if app_name == \"{}\" => rsx!{{", app_config.name.clone()).unwrap();
+                add_app_step_match(
+                    &mut app_matcher_file, 
+                    &app_config.name, 
+                    "app_overview", 
+                    "AppOverview"
+                );
+                let mut app_step_order = 1;
                 for app_step_config in &mut app_config.app_steps {
                     app_step_config.order = app_step_order;
-                    writeln!(app_matcher_file, "        div {{").unwrap();
-                    writeln!(app_matcher_file, "            class: \"app-step-content\",").unwrap();
-                    writeln!(app_matcher_file, "            style: {{ if app_step_name() == Some(\"{}\".to_string()) {} }},", 
-                        app_step_config.name.clone(), 
-                        app_step_display
-                    ).unwrap();
-                    writeln!(app_matcher_file, "           \"data-app\": \"{}\",",     app_config.name.clone()).unwrap();
-                    writeln!(app_matcher_file, "            \"data-app-step\": \"{}\",", app_step_config.name.clone()).unwrap();
-                    writeln!(app_matcher_file, "            {} {{}}",                   app_step_config.component.clone()).unwrap();
-                    writeln!(app_matcher_file, "        }}").unwrap();
+                    add_app_step_match(
+                        &mut app_matcher_file, 
+                        &app_config.name, 
+                        &app_step_config.name, 
+                        &app_step_config.component
+                    );
                     app_step_order += 1;
                 }
                 writeln!(app_matcher_file, "    }},").unwrap();
@@ -128,4 +130,25 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
 
     // finish
     println!("cargo:rerun-if-changed=build.rs");
+}
+
+/// Add a match arm to the app_matcher for a single app step,
+/// including the app overview step.
+fn add_app_step_match(
+    app_matcher_file: &mut File, 
+    app_name:         &str, 
+    app_step_name:    &str, 
+    component_name:   &str
+) {
+    const APP_STEP_DISPLAY: &str = r#"{ "display: block;" } else { "display: none;" }"#;
+    writeln!(app_matcher_file, "        div {{").unwrap();
+    writeln!(app_matcher_file, "            class: \"app-step-content\",").unwrap();
+    writeln!(app_matcher_file, "            style: {{ if app_step_name() == Some(\"{}\".to_string()) {} }},", 
+        app_step_name, 
+        APP_STEP_DISPLAY
+    ).unwrap();
+    writeln!(app_matcher_file, "           \"data-app\": \"{}\",",       app_name).unwrap();
+    writeln!(app_matcher_file, "            \"data-app-step\": \"{}\",", app_step_name).unwrap();
+    writeln!(app_matcher_file, "            {} {{}}",                    component_name).unwrap();
+    writeln!(app_matcher_file, "        }}").unwrap();
 }

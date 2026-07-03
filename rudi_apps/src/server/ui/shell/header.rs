@@ -34,8 +34,19 @@ pub fn ActiveUser() -> Element {
     let user = env::var("USER")
         .map(|val| val.to_string())
         .unwrap_or("USER not set".to_string());
+    let hostname = env::var("HOSTNAME")
+        .map(|val| val.to_string())
+        .unwrap_or("".to_string());
+    let hostname = if hostname.is_empty() { 
+        "".to_string() 
+    } else { 
+        format!("@{}", hostname) 
+    };
     rsx!{
-        div { id: "active-user", {user} }
+        div { id: "active-user",
+            {user}
+            {hostname}
+        }
     }
 }
 

@@ -6,6 +6,7 @@
     --banner-background-dark: #491a06;
     --header-color: #F4EDE2;
     --header-border: #7c5948;
+    --header-border-light: #ab9384;
     --banner-color: #d2c3b6;
     --banner-color-active: #e3d8cc;
     --body-background: #f8f8f8;
@@ -17,6 +18,7 @@
     --banner-background-dark: #00274C;
     --header-color: #FFCB05;
     --header-border: #73712c;
+    --header-border-light: #b29a1a;
     --banner-color: #F2D384;
     --banner-color-active: #fbf2da;
     --body-background: #f8f8f8;
@@ -28,15 +30,19 @@
 ----------------------------------------------------------------------------- */
 :root {
     --hover-mask-dark: #ffffff11;
+    --code-background-color: #e4e4e4;
     --banner-border-width: 1px;
     --header-height: 50px;
     --half-header-height: 20px;
     --border-header-height: 51px;
     --sidebar-width: 175px;
     --border-sidebar-width: 176px;
-    --sidebar-tab-height: 45px;
+    --sidebar-app-name-height: 45px;
+    --sidebar-tab-height: 42px;
     --standard-padding: 10px;
     --half-standard-padding: 5px;
+    --twice-standard-padding: 20px;
+    --max-reading-width: 650px;
 }
 .section-title {
     font-weight: 600;
@@ -44,6 +50,39 @@
 }
 .spacer{
     height: var(--standard-padding);
+}
+.wide-spacer {
+    height: var(--twice-standard-padding);
+}
+h1 {
+    font-size: 1.35em;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: var(--half-standard-padding)
+}
+h2 {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-top: var(--standard-padding);
+    margin-bottom: var(--half-standard-padding)
+}
+h3 {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: var(--standard-padding);
+    margin-bottom: var(--half-standard-padding)
+}
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    font-size: 0.95em;
+    color: var(--banner-background-dark);
+    background-color: var(--code-background-color);
+    border-radius: 5px;
+    padding: 0 var(--half-standard-padding);
+}
+p {
+    max-width: var(--max-reading-width);
 }
 /* -----------------------------------------------------------------------------
    main page layout and cascading styles
@@ -78,6 +117,9 @@ body {
     line-height: var(--header-height);
     border-bottom: var(--banner-border-width) solid var(--header-border);
 }
+#rudi-suite-name-wrapper {
+    border-bottom: var(--banner-border-width) solid var(--header-border-light);
+}
 #rudi-suite-name-wrapper, #app-steps-navbar-wrapper {
     text-align: center;
     white-space: nowrap;
@@ -91,12 +133,13 @@ body {
 #rudi-suite-name{
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 1.05em;
 }
 #rudi-suite-name-wrapper:hover {
     background-color: var(--hover-mask-dark);
 }
 #app-steps-content {
-    padding: var(--standard-padding);
+    padding: var(--standard-padding) var(--twice-standard-padding);
     overflow: auto;
     border-left: var(--banner-border-width) solid var(--header-border);
     border-top: var(--banner-border-width) solid var(--header-border);
@@ -174,556 +217,14 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.app-step-link:hover {
+.app-step-link:hover, .app-step-link-selected {
     background-color: var(--hover-mask-dark);
     color: var(--banner-color-active);
     cursor: pointer;
 }
-
-
-
-/*  ------------------------------------------------------------------------
-    some generic styles
-    ------------------------------------------------------------------------*/
-.downloadExcel {
-    color: rgb(0,0,200);
+.app-step-link:nth-child(1) {
+    color: var(--header-color);
+    border-bottom: var(--banner-border-width) solid var(--header-border-light);
+    font-size: 1.05em;
+    height: var(--sidebar-app-name-height);
 }
-.hidden{
-    display: none;
-}
-.darkred {
-    color: rgb(200,0,0);
-    animation: rotation alternate 
-}
-hr {
-    border-color: #ccc;
-}
-.rudi-update-pending {
-    opacity: 0.5;
-}
-
-/*  ------------------------------------------------------------------------
-    frivolous rotation of the logo on page load
-    ------------------------------------------------------------------------*/
-@keyframes rotateLogo {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(359deg); }
-}
-
-/*  ------------------------------------------------------------------------
-    page layout and scrolling, shinydashboard overrides
-    ------------------------------------------------------------------------*/
-
-.skin-blue .main-sidebar, .content-wrapper {
-    overflow: auto;
-    padding: 0;
-}
-.skin-blue .left-side, .skin-blue .main-sidebar, .skin-blue .wrapper {
-    background-color: #00274C;
-}
-.nav-tabs {
-    font-weight: bold;
-}
-#configure-optionFamilies>div {
-    padding: 0;
-}
-
-/*  ------------------------------------------------------------------------
-    shinydashboard header styles
-    ------------------------------------------------------------------------*/
-.skin-blue .main-header .navbar {
-    background-color: #00274C;
-}
-.skin-blue .main-header .logo {
-    height: 50px;
-    max-height: 50px;
-    width: 175px;    
-    background-color: #00274C;
-    color: #FFCB05;
-    border-bottom: 1px solid #73712c;
-    border-right: 1px solid #73712c;
-    white-space: nowrap;
-    font-size: 1.25em;
-    padding: 0;
-    cursor: pointer;
-}
-.skin-blue .main-header .logo:hover {
-    background-color: #0d3255 !important;
-}
-.skin-blue .main-header .navbar .sidebar-toggle, 
-.header-large-icon {
-    color: #F2D384;
-    float: left;
-    line-height: 50px;
-    padding: 0 10px;     
-}
-.skin-blue .main-header .navbar .sidebar-toggle:hover, 
-.header-large-icon:hover {
-    color: #F2D384 !important;
-    background: #ffffff11;
-}
-.header-status {
-    float: right;
-    color: #ddd;
-    line-height: 20px;
-    margin: 5px 10px;
-    text-align: right;
-}
-.header-status-icon, .header-status-dir-icon {
-    color: #a6921e;
-    cursor: pointer;
-}
-.rudi-main-spinner {
-    margin-left: 0.5em; 
-    color: #ddd; 
-    visibility: hidden; 
-    line-height: 47px !important;
-}
-i#mainSpinner:hover, i.header-async-monitor.fa-spinner:hover { /* avoid weird background spin effect */
-    color: #eee !important;
-    background-color: transparent !important;
-}
-
-/*  ------------------------------------------------------------------------
-    shinydashboard sidebar styles
-    ------------------------------------------------------------------------*/
-.skin-blue  .main-sidebar {
-    padding-top: 50px; 
-    background-color: #00274C;
-    border-top: 1px solid #F2D384;
-}
-.skin-blue .sidebar a {
-    color: #F2D384;
-}
-.skin-blue .sidebar-menu > li.active > a,
-.skin-blue .sidebar-menu > li:hover > a {
-    color: #fbf2da;
-    background: #ffffff11;
-}
-.skin-blue .sidebar-menu > li:hover > a {
-    border-left-color: transparent;
-}    
-.skin-blue .sidebar-menu > li.active > a,
-.skin-blue .sidebar-menu > li.active:hover > a{
-    border-left-color: #FFCB05;
-}
-
-/* custom widgets for the sidebar */
-/* app name */
-.app-name {
-    color: #FFCB05;
-    padding: 0 20px 0 0;
-    text-align: center;
-    font-size: 1.2em;
-}
-
-/* bookmarking */
-.sidebarBookmarking, .sidebarBookmarking:hover, .sidebarBookmarking:focus {
-    border: transparent;    
-    background-color: transparent;    
-}
-.sidebarBookmarking {
-    color: #dddddd !important;
-    padding: 0.25em 1em;
-}
-.sidebarBookmarking:hover {
-    color: #f2f8fc !important;
-}
-.sidebarBookmarkingSingle {
-    margin-top: 2em;
-}
-
-/* git status */
-.sidebar-status {
-    padding: 10px;
-    width: 100%;
-    margin: 0;
-    position: absolute;
-    bottom: 0;
-    font-size: 0.85em;    
-    color: #264767;
-}
-.sidebar-status:hover {
-    color:#F2D384 !important;    
-    background-color: #FFFFFF11;
-    cursor: pointer;
-}
-.sidebar-status p {
-    margin: 0;
-}
-
-/*  ------------------------------------------------------------------------
-    content panel styles
-    ------------------------------------------------------------------------*/
-/*  globus setup styles */
-#globus-setup > div {
-    padding: 0;
-}
-.file-input-controls {
-    border: 1px solid #aab;
-    padding: 10px 0 5px 0;    
-    margin: 10px 0;
-    border-radius: 10px;
-    background-color: white;
-}
-
-/*  app overview styles */
-.overview-table tr {
-    vertical-align: top;
-}
-.overview-table td {
-    padding: 1em;
-}
-.overview-table td:first-of-type {
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-/* content panel styles */
-h3:first-of-type {
-    margin-top: 0;
-}
-.content-wrapper, .right-side {
-    background-color: #fcfcfc;
-    padding: 0 15px;
-    border-top: 1px solid #73712c;
-    border-left: 1px solid #73712c;
-}
-.content-wrapper {
-    overflow: scroll; /* so that the ui width is always accounted for */
-}
-.form-group, .progress {
-    margin-bottom: 0;
-}
-
-/*  ------------------------------------------------------------------------
-    custom widgets for the body
-    ------------------------------------------------------------------------*/
-.header-link, .appStep-header-link {
-   font-size: 0.7em; 
-   margin-left: 10px; 
-}
-.box-header-link {
-    font-size: 0.8em; 
-    margin-left: 10px; 
- }
-.view-code-trigger, a {
-    color: #0174BB;
-}
-.view-code-trigger:hover, a:hover {
-    color: #BA5827;
-}
-.text-block {
-    max-width: 700px;
-    font-size: 1.1em;
-    margin-bottom: 5px;
-}
-.box.box-solid.box-primary>.box-header {
-    background-color: #0174BB;
-}
-.box-header {
-    padding: 5px;
-}
-.box-header .box-title {
-    font-size: 17px;
-}
-.box-body {
-    padding: 5px;
-}
-.margin-5 {
-    margin: 5px;
-}
-table i.fa.fa-circle-notch {
-    color: #0174BB !important;
-}
-table i.fa.fa-check-circle {
-    color: #00a65a !important;
-}
-table i.fa.fa-times-circle {
-    color: rgb(200,0,0) !important;
-}
-table i.fa.fa-check-circle,
-table i.fa.fa-times-circle {
-    font-size: 1.15em;
-}
-.record-actions-link {
-    margin-left: 10px;
-    white-space: nowrap;
-}
-
-/*  ------------------------------------------------------------------------
-    tooltip and help icon styles
-    ------------------------------------------------------------------------*/
-.tooltip{
-    opacity: 1 !important; 
-}
-.tooltip-inner{
-    max-width: 500px;
-    width: auto;
-    padding: 5px 8px 3px 8px;
-    border-radius: 5px;
-    background-color: #424557;
-    color: #eee;
-    border-color: #424557;
-    text-align: center;
-}
-.rudi-help-icon i {
-    vertical-align: text-top;    
-}
-.rudi-help-icon { 
-    margin-left: 4px;     
-    font-size: 1rem; 
-    color: #007700;    
-}
-.rudi-dir-icon {
-    font-size: 1.25rem;
-    margin-left: 8px;
-    cursor: pointer;
-}
-
-/*  ------------------------------------------------------------------------
-    DT data tables
-    ------------------------------------------------------------------------*/
-.table-compact-2 th, .table-compact-2 td {
-    padding: 2px !important;
-}
-.table-compact-4 th, .table-compact-4 td {
-    padding: 4px !important;
-}
-table.dataTable tbody tr:hover {
-    background-color: #f8e9c2 !important;
-}
-table.dataTable tbody tr.selected {
-    background-color: #f6e0a9 !important;
-    color: black;
-}
-.DT-edit-box {
-    background-color: #e3eae8;
-    color: #333;
-}
-.rudi-table-column-filter {
-    /* min-width: 50px; */
-    /* max-width: 50px; */
-    width: 50px;
-}
-.rudi-table-column-filter input {
-    padding: 2px 6px;
-    height: 25px;
-    color: #0174BB;
-}
-
-/*  ------------------------------------------------------------------------
-    sortable, including samples grid
-    ------------------------------------------------------------------------*/
-.default-sortable.rank-list-container {
-    padding: 0 !important;
-    margin: 0;
-}
-.default-sortable .rank-list {
-    min-height: 35px !important;
-}
-.default-sortable .rank-list.rank-list-empty {
-    border: none !important;
-}
-.default-sortable .rank-list-item {
-    padding: 3px !important;
-}
-.rank-list-item.sortable-selected {
-    background-color: #f8e7bb !important;
-}
-.sample-category1-name input{
-    background-color: #e3eae8;
-}
-.sample-category2-name input{
-    background-color: #f8e7bb;
-    margin: 8px 0;    
-}
-.sample-category1-name input,
-.sample-category2-name input {
-    font-weight: bold;
-}
-.samples-category2-names-label {
-    font-weight: bold;
-    text-align: center;
-}
-
-/*  ------------------------------------------------------------------------
-    app loading spinner
-    ------------------------------------------------------------------------*/
-.progress-spinner-div {
-    visibility: hidden;
-    position: absolute;    
-    margin-left: 175px;
-    margin-top: 50px;
-    width: 100vw;
-    max-width: 700px;
-    z-index: 100;
-}
-.progress-spinner {
-    border: 8px solid #67acd6;
-    border-radius: 50%;
-    border-top: 8px solid transparent;
-    width: 80px;
-    height: 80px;
-    -webkit-animation: spin 1.5s linear infinite;
-    animation: spin 1.5s linear infinite;
-    margin: auto;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/*  ------------------------------------------------------------------------
-    modal popups / dialogs / command terminal / Ace editor
-    ------------------------------------------------------------------------*/
-.full-screen-modal {
-    padding: 0;
-    height: 85vh;
-}
-.modal-dismiss-button {
-    float: right;
-}
-#modal-dialog-error {
-    color: rgb(200,0,0);
-}
-.modal-xl { /* settable but not defined by shiny */
-    width: 1200px;
-}
-.command-terminal-lg, .ace-editor-lg, .r-console-lg {
-    height: 500px;
-}
-.command-terminal-xl, .ace-editor-xl, .r-console-xl {
-    height: 650px;
-}
-.r-console-editor-lg {
-    height: 426px;
-}
-.r-console-editor-xl {
-    height: 576px;
-}
-.ace-editor-tree-lg {
-    height: 529px;
-}
-.ace-editor-tree-xl {
-    height: 679px;
-}
-.ace-file-line {
-    line-height: 2em; 
-    font-style: italic; 
-    border-bottom: 1px solid #ddd;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.ace-file-line .ace-file-menu, .ace-file-line .shiny-text-output {
-    display: inline-block;
-    padding-left: 5px;
-    vertical-align: bottom;
-}
-.ace-path-action, .ace-dir-action, .ace-file-second {
-    padding-left: 5px;
-}
-.ace-file-second {
-    margin-left: 4px;
-    border-left: 1px solid #ddd;
-}
-.ace-editor-error-wrapper pre {
-    border: none;
-    background-color: inherit;
-    margin-bottom: 0;
-}
-.aceEditor-controls {
-    border-bottom: 1px solid #ddd;
-}
-.aceEditor-controls .selectize-control {
-    margin-bottom: 0;
-}
-.aceEditor-tab {
-    display: inline-block;    
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    line-height: 31px;
-    white-space: nowrap;
-    padding: 0 10px;
-    color: #333;
-    cursor: pointer;       
-}
-.aceEditor-tab-active {
-    background-color: #efefef;
-    color: black;
-    box-shadow: 1px 1px 1px #ccc;
-}
-.aceEditor-tab-changed {
-    color: #0174BB;
-}
-.aceEditor-tab-error {
-    color: #a00;
-}
-.aceEditor-tab-close, .aceEditor-tab-save { 
-    margin-left: 5px;
-}
-.aceEditor-tab-close:hover, 
-.aceEditor-tab-switch:hover, 
-.aceEditor-tab-save:hover {
-    color: #BA5827;
-}
-
-/*  ------------------------------------------------------------------------
-    results widgets
-    ------------------------------------------------------------------------*/
-.results-box-header-p {
-    margin: 0;
-    padding: 0;
-}
-.results-box-header-button {
-    margin-left: 10px;
-    padding: 0;
-    border: none;
-    color: #fbf2da !important;
-}
-.results-box-header-button:hover {
-    color: white !important;
-}
-
-/*  ------------------------------------------------------------------------
-    Pipeline Runner
-    ------------------------------------------------------------------------*/
-.pr-help-icon i, .pr-required-icon i, .pr-dir-icon i {
-    vertical-align: text-top;    
-}
-.pr-help-icon, .pr-required-icon { 
-    margin-left: 6px;      
-}
-.pr-required-icon {
-    font-size: 0.9rem; 
-    color: rgb(175,0,0);    
-}
-.pr-help-icon {
-    font-size: 1rem; 
-    color: #0174BB;    
-}
-.pr-dir-icon {
-    font-size: 1.1rem;
-    color: #555;
-    margin-left: 6px;
-    cursor: pointer;
-}
-.pr-add-icon {
-    margin-left: 6px;
-    font-size: 1rem;
-    color:#555;
-    vertical-align: middle;
-    cursor: pointer;
-}
-.pr-link-disable {
-    color:#aaaaaa !important;
-    cursor: not-allowed !important;
-}
-.command-output-wrapper pre{
-    /* height: 500px; */
-    background-color: #fbfbfb;
-}
-.command-output-error {
-    color: rgb(150,0,0);
-}
-

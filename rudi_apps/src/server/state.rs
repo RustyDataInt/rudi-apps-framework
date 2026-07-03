@@ -21,7 +21,7 @@ impl ServerState {
         ServerState {
             _suite_name:    Signal::new(suite_name.to_string()),
             app_name:      Signal::new(None),
-            step_name:     Signal::new(None),
+            step_name:     Signal::new(Some("app_overview".to_string())),
             _step_states:   Signal::new(HashMap::new()),
             _step_outcomes: Signal::new(HashMap::new()),
         }
