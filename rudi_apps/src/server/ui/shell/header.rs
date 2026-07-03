@@ -4,16 +4,16 @@
 use std::env;
 use dioxus::prelude::*;
 use dioxus_icons::lucide::{Menu, FolderGit2};
-use crate::server::*;
+// use crate::server::*;
 
-const icon_size: u32 = 24;
+const ICON_SIZE: u32 = 24;
 
 /// `ToggleSidebarLink` provides an icon link to toggle the sidebar.
 #[component]
 pub fn ToggleSidebarLink() -> Element {
     rsx!{
         button {
-            Menu { size: icon_size }
+            Menu { size: ICON_SIZE }
         }
     }
 }
@@ -23,7 +23,7 @@ pub fn ToggleSidebarLink() -> Element {
 pub fn GitVersions() -> Element {
     rsx!{
         button {
-            FolderGit2 { size: icon_size }
+            FolderGit2 { size: ICON_SIZE }
         }
     }
 }
@@ -35,9 +35,7 @@ pub fn ActiveUser() -> Element {
         .map(|val| val.to_string())
         .unwrap_or("USER not set".to_string());
     rsx!{
-        div { id: "active-user",
-            {user}
-        }
+        div { id: "active-user", {user} }
     }
 }
 
@@ -48,8 +46,6 @@ pub fn DataDirectory() -> Element {
         .map(|val| val.to_string())
         .unwrap_or("RUDI_DATA_DIR not set".to_string());
     rsx!{
-        div { id: "data-directory",
-            {data_dir}
-        }
+        div { id: "data-directory", {data_dir} }
     }
 }

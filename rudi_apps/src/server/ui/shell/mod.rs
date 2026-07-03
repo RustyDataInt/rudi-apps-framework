@@ -15,9 +15,7 @@ pub fn SuiteLabel() -> Element {
     // TODO: handle click action on suite name?  or, may be obsolete?
     let server_config = use_context::<ServerConfig>();
     rsx!{
-        div { id: "rudi-suite-name",
-            {server_config.suite_config.label}
-        }
+        div { id: "rudi-suite-name", {server_config.suite_config.label} }
     }
 }
 
@@ -50,7 +48,8 @@ pub fn AppStepChooser() -> Element {
     let app_steps = app_steps.iter().map(|app_step_config| {
         let app_step_config_name = app_step_config.name.clone();
         rsx!{
-            div { class: "app-step-link",
+            div {
+                class: "app-step-link",
                 key: "{app_step_config.name}",
                 onclick: move |_| server_state.set_step(&app_step_config_name),
                 "{app_step_config.label}"
@@ -65,8 +64,8 @@ pub fn AppStepChooser() -> Element {
 /// Error handler for malformed config.
 #[component]
 pub fn AppNotFound(app_name : String) -> Element {
-    rsx!{ 
-        {format!("Error: App '{}' not found.", app_name)} 
+    rsx!{
+        {format!("Error: App '{}' not found.", app_name)}
     }
 }
 
@@ -82,23 +81,17 @@ pub fn AppChooser() -> Element {
         let app_config = &server_config.app_configs[&app_name];
         let app_config_name = app_config.name.clone();
         rsx!{
-            DataPackageLoader {}
-            Spacer {}
-            div{
-                class: "section-title",
-                "Open an app with no data"
+            div { key: "{app_config.name}",
+                DataPackageLoader {}
+                Spacer {}
+                div { class: "section-title", "Open an app with no data" }
+                div {
+                    class: "app-chooser-row",
+                    onclick: move |_| consume_context::<ServerState>().set_app(&app_config_name),
+                    div { class: "app-chooser-label", "{app_config.label}" }
+                    div { class: "app-chooser-description", "{app_config.description}" }
+                }
             }
-            div { 
-                class: "app-chooser-row",
-                key: "{app_config.name}",
-                onclick: move |_| consume_context::<ServerState>().set_app(&app_config_name),
-                div{ class: "app-chooser-label",
-                    "{app_config.label}"
-                }
-                div{ class: "app-chooser-description",
-                    "{app_config.description}"
-                }
-            }   
         }
     });
     rsx!{
