@@ -1,4 +1,6 @@
-//! The feedback elements in the top page header.
+//! The feedback elements in the top page header. These components
+//! show metadata on the server and connection and are not stateful,
+//! namespaced, or serializable, i.e., they are not RudiElements.
 
 // imports
 use std::env;

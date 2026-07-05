@@ -1,13 +1,18 @@
-//! UI components to structure the page layout and initial inputs,
-//! where "shell" refers to the standard app framework layout and components.
+//! UI components to structure the page grid layout and initial 
+//! inputs, where "shell" refers to the standard app framework 
+//! layout and components. Of these, `AppChooser` and `AppStepChooser`
+//! are stateful and recorded in  `use_context::<Signal<ServerState>>`,
+//! although they are not themselves RudiElements.
 
-// modules
 mod header;
+mod bookmark;
 
 // imports
 use dioxus::prelude::*;
 use crate::server::*;
+use crate::ui::*;
 use header::*;
+// use bookmark::*;
 
 // constants
 const APP_OVERVIEW_STEP_NAME: &str = "app_overview";
@@ -45,10 +50,10 @@ pub fn ServerHeaderContent() -> Element {
 #[component]
 pub fn AppStepChooser() -> Element {
     let server_config = use_context::<ServerConfig>();
-    let mut server_state  = use_context::<ServerState>();
-    let has_selected_step = server_state.has_step();
-    let selected_app_step = server_state.get_step().unwrap_or(APP_OVERVIEW_STEP_NAME.to_string());
-    let Some(app_name) = server_state.get_app() else { return rsx!{}; };
+    let mut server_state  = use_context::<Signal<ServerState>>();
+    let has_selected_step = server_state.read().has_step();
+    let selected_app_step = server_state.read().get_step().unwrap_or(APP_OVERVIEW_STEP_NAME.to_string());
+    let Some(app_name) = server_state.read().get_app() else { return rsx!{}; };
     let app_steps = &server_config.app_configs[&app_name].app_steps;
     let mut app_step_divs = vec![{
         let selected_class = if !has_selected_step { 
@@ -58,7 +63,7 @@ pub fn AppStepChooser() -> Element {
                 div {
                 class: format!("app-step-link {}", selected_class),
                 key: "{APP_OVERVIEW_STEP_NAME}",
-                onclick: move |_| server_state.set_step(APP_OVERVIEW_STEP_NAME),
+                onclick: move |_| server_state.write().set_step(APP_OVERVIEW_STEP_NAME),
                 "{server_config.app_configs[&app_name].label}"
             }
         }
@@ -72,7 +77,7 @@ pub fn AppStepChooser() -> Element {
             div {
                 class: format!("app-step-link {}", selected_class),
                 key: "{app_step_config.name}",
-                onclick: move |_| server_state.set_step(&app_step_config_name),
+                onclick: move |_| server_state.write().set_step(&app_step_config_name),
                 "{app_step_config.label}"
             }
         });
@@ -95,6 +100,7 @@ pub fn AppNotFound(app_name : String) -> Element {
 /// never to be rendered again once an app is selected.
 #[component]
 pub fn AppChooser() -> Element {
+    use_context_provider(|| Namespace("app_chooser".to_string()));
     let server_config = use_context::<ServerConfig>();
     let mut app_names: Vec<String> = server_config.app_configs.keys().map(|k| k.clone()).collect();
     app_names.sort_by_key(|app_name| server_config.app_configs[app_name].order);
@@ -103,12 +109,12 @@ pub fn AppChooser() -> Element {
         let app_config_name = app_config.name.clone();
         rsx!{
             div { key: "{app_config.name}",
-                DataPackageLoader {}
+                DataPackageLoader { name: "TMP".to_string() }
                 WideSpacer {}
                 div { class: "section-title", "Open an app with no data" }
                 div {
                     class: "app-chooser-row",
-                    onclick: move |_| consume_context::<ServerState>().set_app(&app_config_name),
+                    onclick: move |_| consume_context::<Signal<ServerState>>().write().set_app(&app_config_name),
                     div { class: "app-chooser-label", "{app_config.label}" }
                     div { class: "app-chooser-description", "{app_config.description}" }
                 }
@@ -124,9 +130,9 @@ pub fn AppChooser() -> Element {
 #[component]
 pub fn AppOverview() -> Element {
     let server_config = use_context::<ServerConfig>();
-    let server_state = use_context::<ServerState>();
-    let app_step_name = server_state.get_step();
-    let Some(app_name) = server_state.get_app() else { return rsx!{}; };
+    let server_state = use_context::<Signal<ServerState>>();
+    let app_step_name = server_state.read().get_step();
+    let Some(app_name) = server_state.read().get_app() else { return rsx!{}; };
     rsx!{
         if app_step_name.is_none() || app_step_name.unwrap() == APP_OVERVIEW_STEP_NAME {
             Markdown { markdown: server_config.app_overviews[&app_name].clone() }

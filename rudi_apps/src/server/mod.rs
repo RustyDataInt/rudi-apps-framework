@@ -1,9 +1,14 @@
-//! The apps framework server module is generally only used by
-//! a tool suite's shared/server `build.rs` and `main.rs` at
-//! build time and runtime.
+//! The apps framework `server` module is generally only used 
+//! directly by a tool suite's shared/server `build.rs` and 
+//! `main.rs` at build time and runtime, respectively.
+//! 
+//! The `state::ServerState` and, less commonly, 
+//! `config::ServerConfig` objects are used indirectly in apps 
+//! by calling `use_context::<Signal<ServerState>>()` and
+//! `use_context::<ServerConfig>()`, respectively.
 
-// RuDI developer note: this script:
-//     `rudi-suite-template/apps/shared/server/build.rs`
+// RuDI developer note: script:
+//     `rudi-suite-template/apps/dioxus/shared/server/build.rs`
 // rarely changes even if updates are made to the shared builder:
 //     `rudi-apps-framework/rudi_apps/src/server/mod.rs::build()`
 // so `println!("cargo:rerun-if-changed=build.rs");` doesn't do much.
@@ -16,7 +21,6 @@
 // modules
 pub mod config;
 pub mod state;
-pub mod ui;
 
 // imports
 use std::path::Path;
@@ -29,7 +33,6 @@ use dioxus::prelude::*;
 // re-exports
 pub use config::*;
 pub use state::*;
-pub use ui::*;
 
 // assets
 pub static RUDI_LOGO_ICO:       Asset = asset!("/assets/favicon.ico");
@@ -72,7 +75,7 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
     // let mut server_config_file = fs::File::create(&server_config_toml).unwrap();
 
     // initialize the app_matcher
-    writeln!(app_matcher_file, "match server_state.get_app() {{").unwrap();
+    writeln!(app_matcher_file, "match server_state.read().get_app() {{").unwrap();
 
     // examine all directories in apps_dir for an app config file
     for app_dir in fs::read_dir(apps_dir_path).unwrap() {
