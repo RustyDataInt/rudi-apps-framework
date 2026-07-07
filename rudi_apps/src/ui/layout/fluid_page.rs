@@ -1,5 +1,4 @@
-//! Broadly reusable app components that establish page layout.
-//! These are organized wrappers, not namespaced components.
+//! Components that define the Boostrap/R Shiny-like fluid grid.
 
 // imports
 use dioxus::prelude::*;
@@ -52,23 +51,8 @@ pub fn FluidRow(children: Element) -> Element {
 #[component]
 pub fn FluidSpan(props: FluidSpanProps) -> Element {
     let width = format!("{}%", props.n_columns as f64 * 8.33);
+    let min_width = props.min_width.unwrap_or("200px".to_string());
     rsx!{
-        div { class: "fluid-span", width, min_width: props.min_width, {props.children} }
-    }
-}
-
-/// Add `var(--standard-padding)` between two components in a vertical stack.
-#[component]
-pub fn Spacer() -> Element {
-    rsx!{
-        div { class: "spacer" }
-    }
-}
-
-/// Add `var(--wide-padding)` between two components in a vertical stack.
-#[component]
-pub fn WideSpacer() -> Element {
-    rsx!{
-        div { class: "wide-spacer" }
+        div { class: "fluid-span", width, min_width, {props.children} }
     }
 }

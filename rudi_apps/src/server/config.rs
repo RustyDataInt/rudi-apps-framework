@@ -58,4 +58,6 @@ pub struct AppStepConfig {
     pub label:       String,
     pub component:   String, // e.g. "MyAppStepComponent"
     pub description: String,
+    #[serde(default)]
+    pub instructions: Option<String>,
 }

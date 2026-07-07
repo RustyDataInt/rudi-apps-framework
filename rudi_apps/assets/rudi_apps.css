@@ -3,27 +3,29 @@
 ----------------------------------------------------------------------------- */
 /* RuDI "rust" color theme */
 :root {
-    --banner-background-dark: #491a06;
+    --header-sidebar-background: #491a06;
     --header-color: #F4EDE2;
-    --header-border: #7c5948;
+    --header-border-dark: #7c5948;
     --header-border-light: #ab9384;
-    --banner-color: #d2c3b6;
-    --banner-color-active: #e3d8cc;
+    --header-sidebar-color: #d2c3b6;
+    --header-sidebar-color-active: #e3d8cc;
     --body-background: #f8f8f8;
     --content-color: #391d11;
     --hover-background-light: #491a0611;
+    --data-panel-title-background: #571f07;
 }
 /* University of Michigan color theme */
 /* :root {
-    --banner-background-dark: #00274C;
+    --header-sidebar-background: #00274C;
     --header-color: #FFCB05;
-    --header-border: #73712c;
+    --header-border-dark: #73712c;
     --header-border-light: #b29a1a;
-    --banner-color: #F2D384;
-    --banner-color-active: #fbf2da;
+    --header-sidebar-color: #F2D384;
+    --header-sidebar-color-active: #fbf2da;
     --body-background: #f8f8f8;
     --content-color: #2e3236;
     --hover-background-light: #00274C11;
+    --data-panel-title-background: #003466;
 } */
  /* -----------------------------------------------------------------------------
    standard layout variables and styles
@@ -44,16 +46,6 @@
     --twice-standard-padding: 20px;
     --max-reading-width: 650px;
 }
-.section-title {
-    font-weight: 600;
-    margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
-}
-.spacer{
-    height: var(--standard-padding);
-}
-.wide-spacer {
-    height: var(--twice-standard-padding);
-}
 h1 {
     font-size: 1.35em;
     font-weight: 700;
@@ -72,17 +64,56 @@ h3 {
     margin-top: var(--standard-padding);
     margin-bottom: var(--half-standard-padding)
 }
+p {
+    max-width: var(--max-reading-width);
+}
 code {
     font-family: 'Courier New', Courier, monospace;
     font-weight: 600;
     font-size: 0.95em;
-    color: var(--banner-background-dark);
+    color: var(--header-sidebar-background);
     background-color: var(--code-background-color);
     border-radius: 5px;
     padding: 0 var(--half-standard-padding);
 }
-p {
-    max-width: var(--max-reading-width);
+.fluid-page {
+    width: 100%;
+}
+.fluid-span {
+    float: left;
+}
+.spacer{
+    height: var(--standard-padding);
+}
+.wide-spacer {
+    height: var(--twice-standard-padding);
+}
+.section-title {
+    font-weight: 600;
+    margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
+}
+.rudi-input-label,
+.input-wrapper label {
+    font-size: 0.95em;
+    font-weight: 600;
+    margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
+}
+.rudi-card {
+    margin:  var(--half-standard-padding);
+    border: 1px solid var(--header-sidebar-background);
+    border-radius: 5px;
+    box-shadow: 2px 2px 3px var(--header-border-dark);
+    background-color: white;
+}
+.rudi-card-title {
+    border: 1px solid var(--header-sidebar-background);
+    border-radius: 5px 5px 0 0;
+    background-color: var(--data-panel-title-background);
+    color: var(--header-color);
+    padding:  var(--half-standard-padding);
+}
+.rudi-card-contents {
+    padding:  var(--half-standard-padding);
 }
 /* -----------------------------------------------------------------------------
    main page layout and cascading styles
@@ -110,12 +141,12 @@ body {
     grid-template-columns: var(--border-sidebar-width) 1fr;
 }
 .rudi-banner {
-    background-color: var(--banner-background-dark);
+    background-color: var(--header-sidebar-background);
 }
 #rudi-suite-name-wrapper, #rudi-header-content-wrapper {
     height: var(--header-height);
     line-height: var(--header-height);
-    border-bottom: var(--banner-border-width) solid var(--header-border);
+    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
 }
 #rudi-suite-name-wrapper {
     border-bottom: var(--banner-border-width) solid var(--header-border-light);
@@ -123,7 +154,7 @@ body {
 #rudi-suite-name-wrapper, #app-steps-navbar-wrapper {
     text-align: center;
     white-space: nowrap;
-    border-right: var(--banner-border-width) solid var(--header-border);
+    border-right: var(--banner-border-width) solid var(--header-border-dark);
 }
 #rudi-suite-name-wrapper {
     font-size: 1.1em;
@@ -141,8 +172,8 @@ body {
 #app-steps-content {
     padding: var(--standard-padding) var(--twice-standard-padding);
     overflow: auto;
-    border-left: var(--banner-border-width) solid var(--header-border);
-    border-top: var(--banner-border-width) solid var(--header-border);
+    border-left: var(--banner-border-width) solid var(--header-border-dark);
+    border-top: var(--banner-border-width) solid var(--header-border-dark);
     color: var(--content-color);
 }
 /* -----------------------------------------------------------------------------
@@ -158,24 +189,24 @@ body {
 #rudi-header-content-icons > button {
     margin-top: 13px;
     background-color: transparent;
-    color: var(--banner-color);
+    color: var(--header-sidebar-color);
     border: none;
 }
 #rudi-header-content-icons > button:hover {
-    color: var(--banner-color-active);
+    color: var(--header-sidebar-color-active);
     cursor: pointer;
 }
 #rudi-header-content-server-data {
     margin-top: 5px;
     float: right;
     text-align: right;
-    color: var(--banner-color);
+    color: var(--header-sidebar-color);
 }
 #rudi-header-content-server-data > div {
     line-height: var(--half-header-height);
 }
 #rudi-header-content-server-data > div:hover {
-    color: var(--banner-color-active);
+    color: var(--header-sidebar-color-active);
 }
 /* -----------------------------------------------------------------------------
    data package loader
@@ -184,8 +215,8 @@ body {
     width: 100%;
     max-width: 680px;
     padding: var(--standard-padding);
-    border-top: var(--banner-border-width) solid var(--header-border);
-    border-bottom: var(--banner-border-width) solid var(--header-border);
+    border-top: var(--banner-border-width) solid var(--header-border-dark);
+    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
 }
 /* -----------------------------------------------------------------------------
    app chooser
@@ -203,23 +234,23 @@ body {
 .app-chooser-row > div {
     display: inline-block;
     padding: var(--standard-padding);
-    border-top: var(--banner-border-width) solid var(--header-border);
-    border-bottom: var(--banner-border-width) solid var(--header-border);
+    border-top: var(--banner-border-width) solid var(--header-border-dark);
+    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
 }
 /* -----------------------------------------------------------------------------
    app step sidebar children
 ----------------------------------------------------------------------------- */
 .app-step-link {
-    color: var(--banner-color);
+    color: var(--header-sidebar-color);
     height: var(--sidebar-tab-height);
     line-height: var(--sidebar-tab-height);
-    border-bottom: var(--banner-border-width) solid var(--header-border);
+    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .app-step-link:hover, .app-step-link-selected {
     background-color: var(--hover-mask-dark);
-    color: var(--banner-color-active);
+    color: var(--header-sidebar-color-active);
     cursor: pointer;
 }
 .app-step-link:nth-child(1) {

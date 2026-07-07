@@ -16,9 +16,9 @@ use serde_json as json;
 use dioxus::prelude::*;
 use crate::server::*;
 
-/// `Namespace` is a newtype wrapper for a `String` that is used 
-/// to provide a namespace to a RudiElement's children via 
-/// `use_context_provider(|| Namespace::from(&this))`.
+/// `Namespace` is a newtype for `String` used to provide 
+/// a namespace to a RudiElement's children via 
+/// `use_context_provider(|| Namespace::from(&RudiElement))`.
 #[derive(Clone, PartialEq)]
 pub struct Namespace(pub String);
 impl From<&RudiElement> for Namespace {
@@ -55,9 +55,10 @@ impl RudiElement {
         }
     }
 
-    /// Create a new `RudiElement` with the given name and namespace.
-    /// A `namespace` is required except for top-level elements, most
-    /// notably app steps, in which case the namespace will be "app".
+    /// Create a new top-level app-step `RudiElement` with the given name.
+    /// The namespace is set to "app", thus the step id will be "app-<step_name>".
+    /// 
+    /// Usually, the app step data type `T` is `()`, but it can be other types.
     pub fn app_step<T>(
         name: &str, 
     ) -> RudiElement {
@@ -65,16 +66,13 @@ impl RudiElement {
         Self::new_rudi_element::<T>(name, namespace)
     }
 
-    /// Create a new `RudiElement` with the given name and namespace.
-    /// A `namespace` is required except for top-level elements, most
-    /// notably app steps, in which case the namespace will be "app".
+    /// Create a new `RudiElement` with the given name and data type. 
+    /// The namespace is inherited from the parent `RudiElement` via 
+    /// `use_context::<Namespace>()`.
     pub fn new<T>(
         name: &str, 
     ) -> RudiElement {
-        log::info!("Creating new RudiElement with name: {}", name);
-        log::info!("TRYING: use_context::<Namespace>()");
         let namespace = use_context::<Namespace>();
-        log::info!("SUCCESS: use_context::<Namespace>() {}", namespace.0);
         Self::new_rudi_element::<T>(name, namespace)
     }
     
@@ -96,5 +94,19 @@ impl RudiElement {
             .get_input(&self.id)
             .and_then(|v| json::from_value::<T>(v).ok());
         value_opt
+    }
+
+    /// Get the initial value of a child of this `RudiElement` from 
+    /// the server state, with a default value. This function is used
+    /// to restore a bookmarked state of a child on app load.
+    /// By using `peek`, we do not subscribe to the changing server
+    /// state during app use, so this function executes once per call.
+    pub fn get_initial_state<T: DeserializeOwned>(&self, child_name: &str, default: T) -> T {
+        let server_state = consume_context::<Signal<ServerState>>();
+        let value_opt = server_state
+            .peek()
+            .get_input(&format!("{}-{}", self.id, child_name))
+            .and_then(|v| json::from_value::<T>(v).ok());
+        value_opt.unwrap_or(default)
     }
 }
