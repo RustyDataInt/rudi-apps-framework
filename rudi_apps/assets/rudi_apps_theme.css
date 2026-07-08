@@ -1,0 +1,134 @@
+/* -----------------------------------------------------------------------------
+   color theme (uncomment one of these, or create your own in the same pattern)
+----------------------------------------------------------------------------- */
+/* RuDI "rust" color theme */
+:root {
+    --header-sidebar-background: #491a06;
+    --header-color: #F4EDE2;
+    --header-border-dark: #7c5948;
+    --header-border-light: #ab9384;
+    --header-sidebar-color: #d2c3b6;
+    --header-sidebar-color-active: #e3d8cc;
+    --body-background: #f8f8f8;
+    --content-color: #391d11;
+    --hover-background-light: #491a0611;
+    --data-panel-title-background: #571f07;
+}
+/* University of Michigan color theme */
+/* :root {
+    --header-sidebar-background: #00274C;
+    --header-color: #FFCB05;
+    --header-border-dark: #73712c;
+    --header-border-light: #b29a1a;
+    --header-sidebar-color: #F2D384;
+    --header-sidebar-color-active: #fbf2da;
+    --body-background: #f8f8f8;
+    --content-color: #2e3236;
+    --hover-background-light: #00274C11;
+    --data-panel-title-background: #003466;
+} */
+/* -----------------------------------------------------------------------------
+   additional variables, generally do not change these
+----------------------------------------------------------------------------- */
+:root {
+    --hover-mask-dark: #ffffff11;
+    --code-background-color: #e4e4e4;
+    --banner-border-width: 1px;
+    --header-height: 50px;
+    --half-header-height: 20px;
+    --border-header-height: 51px;
+    --sidebar-width: 175px;
+    --app-steps-sidebar-width: 176px;
+    --instructions-sidebar-width: 401px;
+    --hidden-sidebar-width: 0px;
+    --sidebar-app-name-height: 45px;
+    --sidebar-tab-height: 42px;
+    --standard-padding: 10px;
+    --half-standard-padding: 5px;
+    --twice-standard-padding: 20px;
+    --max-reading-width: 650px;
+}
+ /* -----------------------------------------------------------------------------
+   standard elements
+----------------------------------------------------------------------------- */
+body {
+    background-color: var(--body-background);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0; 
+}
+h1 {
+    font-size: 1.35em;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: var(--half-standard-padding)
+}
+h2 {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-top: var(--standard-padding);
+    margin-bottom: var(--half-standard-padding);
+}
+h3 {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: var(--standard-padding);
+    margin-bottom: var(--half-standard-padding)
+}
+p {
+    max-width: var(--max-reading-width);
+    margin: var(--half-standard-padding) 0;
+}
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    font-size: 0.95em;
+    color: var(--header-sidebar-background);
+    background-color: var(--code-background-color);
+    border-radius: 5px;
+    padding: 0 var(--half-standard-padding);
+}
+ /* -----------------------------------------------------------------------------
+   custom elements and classes
+----------------------------------------------------------------------------- */
+.spacer{
+    height: var(--standard-padding);
+}
+.wide-spacer {
+    height: var(--twice-standard-padding);
+}
+.section-title {
+    font-weight: 600;
+    margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
+}
+.rudi-input-label,
+.input-wrapper label {
+    font-size: 0.95em;
+    font-weight: 600;
+    margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
+}
+.tooltip {
+    background-color: #000000bb;
+    color: white;
+    border-radius: 5px;
+    z-index: 10;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%);
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+}
+/* -----------------------------------------------------------------------------
+   data package loader
+----------------------------------------------------------------------------- */
+.data-package-loader {
+    width: 100%;
+    max-width: 680px;
+    padding: var(--standard-padding);
+    border-top: var(--banner-border-width) solid var(--header-border-dark);
+    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
+}

@@ -4,12 +4,12 @@
 // modules
 mod fluid_page;
 mod app_step_page;
-mod rudi_card;
+mod data_panel;
 
 // re-exports
 pub use fluid_page::*;
 pub use app_step_page::*;
-pub use rudi_card::*;
+pub use data_panel::*;
 
 // imports
 use dioxus::prelude::*;

@@ -9,6 +9,7 @@ mod bookmark;
 
 // imports
 use dioxus::prelude::*;
+use dioxus_icons::lucide::{X};
 use crate::server::*;
 use crate::ui::*;
 use header::*;
@@ -16,14 +17,15 @@ use header::*;
 
 // constants
 const APP_OVERVIEW_STEP_NAME: &str = "app_overview";
+const ICON_SIZE: u32 = 24;
 
 /// `SuiteLabel` is the top-left label for the tool suite.
 #[component]
 pub fn SuiteLabel() -> Element {
-    // TODO: handle click action on suite name?  or, may be obsolete?
+    // TODO: handle click action on suite label? may be obsolete?
     let server_config = use_context::<ServerConfig>();
     rsx!{
-        div { id: "rudi-suite-name", {server_config.suite_config.label} }
+        div { id: "suite-label", {server_config.suite_config.label} }
     }
 }
 
@@ -31,12 +33,12 @@ pub fn SuiteLabel() -> Element {
 #[component]
 pub fn ServerHeaderContent() -> Element {
     rsx!{
-        div { id: "rudi-header-content",
-            div { id: "rudi-header-content-icons",
+        div { id: "header-content",
+            div { id: "header-content-icons",
                 ToggleSidebarLink {}
                 GitVersions {}
             }
-            div { id: "rudi-header-content-server-data",
+            div { id: "header-content-server-data",
                 ActiveUser {}
                 DataDirectory {}
             }
@@ -84,6 +86,31 @@ pub fn AppStepChooser() -> Element {
     });
     rsx!{
         {app_step_divs.iter()}
+    }
+}
+
+/// `AppStepInstructions` replaces the app steps with the instructions
+/// for the active app step.
+#[component]
+pub fn AppStepInstructions() -> Element {
+    let server_config = use_context::<ServerConfig>();
+    let server_state  = use_context::<Signal<ServerState>>();
+    let Some(app_name) = server_state.read().get_app() else { return rsx!{}; };
+    let Some(app_step_name) = server_state.read().get_step() else { return rsx!{}; };
+    let app_step_config = server_config.app_configs[&app_name].app_steps.iter()
+        .find(|step| step.name == app_step_name);
+    let Some(app_step_config) = app_step_config else { return rsx!{}; };
+    let Some(instructions) = &app_step_config.instructions else { return rsx!{}; };
+    rsx!{
+        Markdown { markdown: instructions.clone() }
+        div {
+            id: "instructions-close",
+            onclick: move |_| {
+                let mut ui_state = consume_context::<Signal<UiState>>();
+                ui_state.set(UiState::open_app_steps());
+            },
+            X { size: ICON_SIZE }
+        }
     }
 }
 

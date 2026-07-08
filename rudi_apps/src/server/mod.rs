@@ -36,7 +36,8 @@ pub use state::*;
 
 // assets
 pub static RUDI_LOGO_ICO:       Asset = asset!("/assets/favicon.ico");
-pub static RUDI_FRAMEWORK_CSS:  Asset = asset!("/assets/rudi_apps.css");
+pub static RUDI_THEME_CSS:      Asset = asset!("/assets/rudi_apps_theme.css");
+pub static RUDI_LAYOUT_CSS:     Asset = asset!("/assets/rudi_apps_layout.css");
 pub static RUDI_FRAMEWORK_JS:   Asset = asset!("/assets/rudi_apps.js");
 pub static DX_COMPONENTS_THEME: Asset = asset!("/assets/dx-components-theme.css");
 
@@ -101,6 +102,13 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
                 let mut app_step_order = 1;
                 for app_step_config in &mut app_config.app_steps {
                     app_step_config.order = app_step_order;
+                    if app_step_config.tooltip.is_none() {
+                        app_step_config.tooltip = Some(app_step_config.title.clone());
+                    }
+                    let app_step_instructions_file = app_dir.path().join(format!("src/{}/instructions.md", app_step_config.name));
+                    app_step_config.instructions = fs::read_to_string(&app_step_instructions_file).ok();
+                    let app_step_settings_file = app_dir.path().join(format!("src/{}/settings.yml", app_step_config.name));
+                    app_step_config.settings = fs::read_to_string(&app_step_settings_file).ok();
                     add_app_step_match(
                         &mut app_matcher_file, 
                         &app_config.name, 

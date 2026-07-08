@@ -7,6 +7,9 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 
+/// `ServerState` holds the stateful, bookmarkable information about 
+/// the current state of the app (in contrast to `UiState` which is 
+/// not stateful).
 #[derive(Clone, Deserialize, Serialize)]
 pub struct ServerState {
     // the first three fields determine the active content page

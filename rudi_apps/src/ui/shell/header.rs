@@ -6,8 +6,9 @@
 use std::env;
 use dioxus::prelude::*;
 use dioxus_icons::lucide::{Menu, FolderGit2};
-// use crate::server::*;
+use crate::ui::UiState;
 
+// constants
 const ICON_SIZE: u32 = 24;
 
 /// `ToggleSidebarLink` provides an icon link to toggle the sidebar.
@@ -15,6 +16,15 @@ const ICON_SIZE: u32 = 24;
 pub fn ToggleSidebarLink() -> Element {
     rsx!{
         button {
+            onclick: move |_| {
+                let mut ui_state = consume_context::<Signal<UiState>>();
+                let showing_app_steps = ui_state.read().showing_app_steps;
+                if ui_state.read().sidebar_open {
+                    ui_state.set(UiState::close_sidebar(showing_app_steps));
+                } else {
+                    ui_state.set(UiState::open_sidebar(showing_app_steps));
+                }
+            },
             Menu { size: ICON_SIZE }
         }
     }
@@ -35,20 +45,17 @@ pub fn GitVersions() -> Element {
 pub fn ActiveUser() -> Element {
     let user = env::var("USER")
         .map(|val| val.to_string())
-        .unwrap_or("USER not set".to_string());
+        .unwrap_or("unknown_user".to_string());
     let hostname = env::var("HOSTNAME")
         .map(|val| val.to_string())
         .unwrap_or("".to_string());
-    let hostname = if hostname.is_empty() { 
-        "".to_string() 
+    let value = if hostname.is_empty() { 
+        user
     } else { 
-        format!("@{}", hostname) 
+        format!("{user}@{hostname}") 
     };
     rsx!{
-        div { id: "active-user",
-            {user}
-            {hostname}
-        }
+        div { id: "active-user", {value} }
     }
 }
 

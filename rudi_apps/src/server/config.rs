@@ -53,11 +53,15 @@ pub struct AppConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppStepConfig {
     #[serde(default)]
-    pub order:       u8,
-    pub name:        String,
-    pub label:       String,
-    pub component:   String, // e.g. "MyAppStepComponent"
-    pub description: String,
+    pub order:        u8,
+    pub name:         String,
+    pub label:        String,
+    pub component:    String, // e.g. "MyAppStepComponent"
+    pub title:        String,
+    #[serde(default)]
+    pub tooltip:      Option<String>,
     #[serde(default)]
     pub instructions: Option<String>,
+    #[serde(default)]
+    pub settings:     Option<String>,
 }

@@ -7,9 +7,9 @@
 use dioxus::prelude::*;
 use crate::ui::*;
 
-/// Dioxus Properties for a `TextInput`.
+/// Dioxus Properties for a `DataPanel`.
 #[derive(PartialEq, Clone, Props)]
-pub struct RudiCardProps {
+pub struct DataPanelProps {
     // required
     name:      String,
     // optional
@@ -23,7 +23,7 @@ pub struct RudiCardProps {
 /// A component for a standardized data display panel
 /// with a header bar containing action link icons.
 #[component]
-pub fn RudiCard(props: RudiCardProps) -> Element {
+pub fn DataPanel(props: DataPanelProps) -> Element {
 
     let this = RudiElement::new::<()>(&props.name);
     use_context_provider(|| Namespace::from(&this));
@@ -31,9 +31,9 @@ pub fn RudiCard(props: RudiCardProps) -> Element {
 
     rsx!{
         FluidSpan { n_columns: props.n_columns, min_width: props.min_width,
-            div { class: "rudi-card",
-                div { class: "rudi-card-title", "{title}" }
-                div { class: "rudi-card-contents", {props.children} }
+            div { class: "data-panel",
+                div { class: "data-panel-title", "{title}" }
+                div { class: "data-panel-contents", {props.children} }
             
             }
         }
