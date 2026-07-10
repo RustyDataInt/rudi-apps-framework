@@ -28,6 +28,7 @@
     height: var(--header-height);
     line-height: var(--header-height);
     border-bottom: var(--banner-border-width) solid var(--header-border-dark);
+    cursor: default;
 }
 #suite-label-wrapper, #app-steps-navbar-wrapper, #instructions-wrapper {
     border-right: var(--banner-border-width) solid var(--header-border-dark);
@@ -102,7 +103,7 @@
     color: var(--header-sidebar-color-active);
 }
 /* -----------------------------------------------------------------------------
-   main page sidebar: app step chooser and app step instructions
+   main page sidebar: app step chooser, bookmark save, and app step instructions
 ----------------------------------------------------------------------------- */
 /* app step chooser */
 .app-step-link {
@@ -124,6 +125,24 @@
     font-size: 1.05em;
     height: var(--sidebar-app-name-height);
 }
+/* bookmark saver */
+#save-bookmark-wrapper {
+    margin-top: var(--twice-standard-padding);
+    margin-left: var(--standard-padding);
+    color: var(--header-sidebar-color-active);
+    text-align: left;
+    font-size: 0.95em;
+    cursor: default;
+}
+.save-bookmark-type {
+    margin-top: var(--half-standard-padding);
+    margin-left: var(--standard-padding);
+    color: var(--header-sidebar-color);
+    cursor: pointer;
+}
+.save-bookmark-type:hover {
+    color: var(--header-sidebar-color-active);
+}
 /* app step instructions */
 #instructions-wrapper > div {
     padding: var(--standard-padding);
@@ -134,7 +153,7 @@
 }
 #instructions-close {
     position: absolute;
-    top: var(--standard-padding);
+    top: var(--half-standard-padding);
     right: var(--standard-padding);
     color: #666;
 }
@@ -143,8 +162,20 @@
     cursor: pointer;
 }
 /* -----------------------------------------------------------------------------
-   app chooser
+   launch page: data package loader, bookmark loader, app chooser
 ----------------------------------------------------------------------------- */
+/* data package loader, bookmark loader */
+.data-package-loader, .bookmark-loader {
+    width: 100%;
+    max-width: 680px;
+    padding: var(--standard-padding);
+    border-top: var(--banner-border-width) solid var(--header-border-dark);
+    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
+}
+.data-package-loader input, .bookmark-loader input {
+    border: 0;
+    background-color: transparent;
+}
 .app-chooser-row {
     width: 100%;
     max-width: 700px;
@@ -177,7 +208,7 @@
     display: flex;
     align-items: center;
     gap: var(--standard-padding);
-    font-size: 1.25em;
+    font-size: 1.3em;
     font-weight: 700;
     margin-bottom: var(--standard-padding);
 }

@@ -39,7 +39,7 @@
     --border-header-height: 51px;
     --sidebar-width: 175px;
     --app-steps-sidebar-width: 176px;
-    --instructions-sidebar-width: 401px;
+    --instructions-sidebar-width: 500px;
     --hidden-sidebar-width: 0px;
     --sidebar-app-name-height: 45px;
     --sidebar-tab-height: 42px;
@@ -77,7 +77,7 @@ h3 {
 }
 p {
     max-width: var(--max-reading-width);
-    margin: var(--half-standard-padding) 0;
+    margin: var(--standard-padding) 0;
 }
 code {
     font-family: 'Courier New', Courier, monospace;
@@ -98,6 +98,7 @@ code {
     height: var(--twice-standard-padding);
 }
 .section-title {
+    font-size: 1.05em;
     font-weight: 600;
     margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
 }
@@ -113,7 +114,7 @@ code {
     border-radius: 5px;
     z-index: 10;
     position: absolute;
-    top: 85%;
+    top: 125%;
     left: 50%;
     transform: translate(-50%);
     padding: 5px;
@@ -121,14 +122,4 @@ code {
     font-weight: 500;
     text-align: center;
     white-space: nowrap;
-}
-/* -----------------------------------------------------------------------------
-   data package loader
------------------------------------------------------------------------------ */
-.data-package-loader {
-    width: 100%;
-    max-width: 680px;
-    padding: var(--standard-padding);
-    border-top: var(--banner-border-width) solid var(--header-border-dark);
-    border-bottom: var(--banner-border-width) solid var(--header-border-dark);
 }

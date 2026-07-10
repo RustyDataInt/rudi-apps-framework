@@ -13,7 +13,9 @@ use dioxus_icons::lucide::{X};
 use crate::server::*;
 use crate::ui::*;
 use header::*;
-// use bookmark::*;
+
+// re-exports
+pub use bookmark::*;
 
 // constants
 const APP_OVERVIEW_STEP_NAME: &str = "app_overview";
@@ -138,7 +140,9 @@ pub fn AppChooser() -> Element {
             div { key: "{app_config.name}",
                 DataPackageLoader { name: "TMP".to_string() }
                 WideSpacer {}
-                div { class: "section-title", "Open an app with no data" }
+                BookmarkLoader {}
+                WideSpacer {}
+                div { class: "section-title", "Open an app with no initial data" }
                 div {
                     class: "app-chooser-row",
                     onclick: move |_| consume_context::<Signal<ServerState>>().write().set_app(&app_config_name),

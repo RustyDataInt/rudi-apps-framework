@@ -14,6 +14,7 @@ dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version 
 tokio = { version = "1", features = ["full"], optional = true}
 
 # web-only wasm-javascript bindings
+web-sys = { version = "0.3", features = ["Document", "Blob", "BlobPropertyBag", "HtmlAnchorElement", "Url"], optional = true }
 wasm-bindgen = { version = "0.2", optional = true }
 wasm-bindgen-futures = { version = "0.4", optional = true }
 gloo-timers = { version = "0.4", features = ["futures"], optional = true }
@@ -41,5 +42,5 @@ console_log = "1.0"
 [features]
 default = ["web"]
 desktop = ["dioxus/desktop"]
-web     = ["dioxus/web", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:gloo-timers"]
+web     = ["dioxus/web", "dep:web-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:gloo-timers"]
 server  = ["dioxus/server", "dep:tokio"]

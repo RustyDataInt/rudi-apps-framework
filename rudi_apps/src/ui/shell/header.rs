@@ -6,7 +6,7 @@
 use std::env;
 use dioxus::prelude::*;
 use dioxus_icons::lucide::{Menu, FolderGit2};
-use crate::ui::UiState;
+use crate::ui::*;
 
 // constants
 const ICON_SIZE: u32 = 24;
@@ -25,7 +25,9 @@ pub fn ToggleSidebarLink() -> Element {
                     ui_state.set(UiState::open_sidebar(showing_app_steps));
                 }
             },
-            Menu { size: ICON_SIZE }
+            Tooltip { text: "Toggle the sidebar".to_string(),
+                Menu { size: ICON_SIZE }
+            }
         }
     }
 }
