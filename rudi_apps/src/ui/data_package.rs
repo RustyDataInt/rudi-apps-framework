@@ -15,6 +15,9 @@ pub fn DataPackageLoader(name: String) -> Element {
     let this = RudiElement::new::<Option<String>>(&name);
     let _value = use_signal(|| None::<String>);
     let from_local = "From your computer".to_string();
+    // TODO: implement from_server
+    // TODO: implement data package loading
+    let onchange = move |_evt| {}; 
     rsx!{
         div { class: "section-title", "Load a data package from a pipeline" }
         div { class: "data-package-loader input-wrapper",
@@ -23,7 +26,7 @@ pub fn DataPackageLoader(name: String) -> Element {
                 id: this.id,
                 r#type: "file",
                 accept: ".rudi.package.zip",
-                onchange: move |_evt| {},
+                onchange,
             }
         }
     }

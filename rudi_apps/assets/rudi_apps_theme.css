@@ -4,6 +4,7 @@
 /* RuDI "rust" color theme */
 :root {
     --header-sidebar-background: #491a06;
+    --header-sidebar-background-active: #491a06cf;
     --header-color: #F4EDE2;
     --header-border-dark: #7c5948;
     --header-border-light: #ab9384;
@@ -17,6 +18,7 @@
 /* University of Michigan color theme */
 /* :root {
     --header-sidebar-background: #00274C;
+    --header-sidebar-background-active: #00274Ccc;
     --header-color: #FFCB05;
     --header-border-dark: #73712c;
     --header-border-light: #b29a1a;
@@ -47,6 +49,8 @@
     --half-standard-padding: 5px;
     --twice-standard-padding: 20px;
     --max-reading-width: 650px;
+    --panel-header-full-height: 18px;
+    --panel-header-empty-height: 8px;
 }
  /* -----------------------------------------------------------------------------
    standard elements
@@ -102,11 +106,12 @@ code {
     font-weight: 600;
     margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
 }
-.rudi-input-label,
-.input-wrapper label {
-    font-size: 0.95em;
-    font-weight: 600;
-    margin: var(--standard-padding) 0 var(--half-standard-padding) var(--half-standard-padding);
+ /* -----------------------------------------------------------------------------
+   tooltip
+----------------------------------------------------------------------------- */
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
 }
 .tooltip {
     background-color: #000000bb;

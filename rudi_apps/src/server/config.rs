@@ -61,7 +61,4 @@ pub struct AppStepConfig {
     #[serde(default)]
     pub tooltip:      Option<String>,
     #[serde(default)]
-    pub instructions: Option<String>,
-    #[serde(default)]
-    pub settings:     Option<String>,
-}
+    pub instructions: Option<String>,}

@@ -23,6 +23,8 @@ pub struct FluidSpanProps{
 /// 
 /// A `FluidPage` contains `FluidRow`s, which in turn contain 
 /// `FluidSpan`s.
+/// 
+/// The `max_width` property defaults to "100%" if not set.
 #[component]
 pub fn FluidPage(props: FluidPageProps) -> Element {
     rsx!{

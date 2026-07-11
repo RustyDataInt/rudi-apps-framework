@@ -24,10 +24,9 @@ const ICON_SIZE: u32 = 24;
 /// `SuiteLabel` is the top-left label for the tool suite.
 #[component]
 pub fn SuiteLabel() -> Element {
-    // TODO: handle click action on suite label? may be obsolete?
     let server_config = use_context::<ServerConfig>();
     rsx!{
-        div { id: "suite-label", {server_config.suite_config.label} }
+        div { id: "page-suite-label", {server_config.suite_config.label} }
     }
 }
 
@@ -35,12 +34,12 @@ pub fn SuiteLabel() -> Element {
 #[component]
 pub fn ServerHeaderContent() -> Element {
     rsx!{
-        div { id: "header-content",
-            div { id: "header-content-icons",
+        div { id: "page-header-content",
+            div { id: "page-header-content-icons",
                 ToggleSidebarLink {}
                 GitVersions {}
             }
-            div { id: "header-content-server-data",
+            div { id: "page-header-content-server-data",
                 ActiveUser {}
                 DataDirectory {}
             }
@@ -103,14 +102,13 @@ pub fn AppStepInstructions() -> Element {
         .find(|step| step.name == app_step_name);
     let Some(app_step_config) = app_step_config else { return rsx!{}; };
     let Some(instructions) = &app_step_config.instructions else { return rsx!{}; };
+    let onclick = move |_| {
+        let mut ui_state = consume_context::<Signal<UiState>>();
+        ui_state.set(UiState::open_app_steps());
+    };
     rsx!{
         Markdown { markdown: instructions.clone() }
-        div {
-            id: "instructions-close",
-            onclick: move |_| {
-                let mut ui_state = consume_context::<Signal<UiState>>();
-                ui_state.set(UiState::open_app_steps());
-            },
+        div { id: "instructions-close", onclick,
             X { size: ICON_SIZE }
         }
     }
@@ -136,6 +134,10 @@ pub fn AppChooser() -> Element {
     let apps = app_names.into_iter().map(|app_name| {
         let app_config = &server_config.app_configs[&app_name];
         let app_config_name = app_config.name.clone();
+        let onclick = move |_| {
+            let mut server_state = consume_context::<Signal<ServerState>>();
+            server_state.write().set_app(&app_config_name);
+        };
         rsx!{
             div { key: "{app_config.name}",
                 DataPackageLoader { name: "TMP".to_string() }
@@ -143,9 +145,7 @@ pub fn AppChooser() -> Element {
                 BookmarkLoader {}
                 WideSpacer {}
                 div { class: "section-title", "Open an app with no initial data" }
-                div {
-                    class: "app-chooser-row",
-                    onclick: move |_| consume_context::<Signal<ServerState>>().write().set_app(&app_config_name),
+                div { class: "app-chooser-row", onclick,
                     div { class: "app-chooser-label", "{app_config.label}" }
                     div { class: "app-chooser-description", "{app_config.description}" }
                 }

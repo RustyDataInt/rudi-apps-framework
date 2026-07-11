@@ -15,6 +15,33 @@ use crate::server::ServerState;
 pub fn BookmarkLoader() -> Element {
     const ID: &str = "bookmark-loader";
     let from_local = "From your computer".to_string();
+    let oninput_local = move |e: FormEvent| {
+        let mut server_state = consume_context::<Signal<ServerState>>();
+        spawn(async move {
+            log::info!("BookmarkLoader: file input changed");
+            let files = e.files();
+            let Some(file_data) = files.first() else {
+                return;
+            };
+            log::info!("BookmarkLoader: file selected: {:?}", file_data.name());
+            let Ok(json) = file_data.read_string().await else {
+                log::error!(
+                    "BookmarkLoader: failed to read JSON from file {}", file_data.name()
+                );
+                return;
+            };
+            match serde_json::from_str::<ServerState>(&json) {
+                Ok(state) => {
+                    log::info!("BookmarkLoader: bookmark JSON parsed successfully");
+                    server_state.set(state);
+                }
+                Err(e) => {
+                    log::error!("Failed to parse bookmark JSON: {:?}", e);
+                }
+            }
+        });
+    };
+    // TODO: implement oninput_server to load a bookmark from server
     rsx!{
         div { class: "section-title", "Load a previously saved bookmark" }
         div { class: "bookmark-loader input-wrapper",
@@ -23,32 +50,7 @@ pub fn BookmarkLoader() -> Element {
                 id: ID.to_string(),
                 r#type: "file",
                 accept: ".json",
-                oninput: move |e: FormEvent| {
-                    let mut server_state = consume_context::<Signal<ServerState>>();
-                    spawn(async move {
-                        log::info!("BookmarkLoader: file input changed");
-                        let files = e.files();
-                        let Some(file_data) = files.first() else {
-                            return;
-                        };
-                        log::info!("BookmarkLoader: file selected: {:?}", file_data.name());
-                        let Ok(json) = file_data.read_string().await else {
-                            log::error!(
-                                "BookmarkLoader: failed to read JSON from file {}", file_data.name()
-                            );
-                            return;
-                        };
-                        match serde_json::from_str::<ServerState>(&json) {
-                            Ok(state) => {
-                                log::info!("BookmarkLoader: bookmark JSON parsed successfully");
-                                server_state.set(state);
-                            }
-                            Err(e) => {
-                                log::error!("Failed to parse bookmark JSON: {:?}", e);
-                            }
-                        }
-                    });
-                },
+                oninput: oninput_local,
             }
         }
     }
@@ -62,22 +64,23 @@ pub fn BookmarkSaver() -> Element {
     if !server_state.read().has_app() {
         return rsx!{};
     }
+    let onclick_local = move |_| {
+        #[cfg(target_arch = "wasm32")]
+        {
+            let server_state = consume_context::<Signal<ServerState>>();
+            download_json(&*server_state.read(), "my.rudi.bookmark.json").unwrap_or_else(|e| {
+                log::error!("Failed to download server state as JSON file: {:?}", e);
+            });
+        }
+    };
+    // TODO: implement onclick_server to save bookmark to server
     rsx!{
         div { id: "save-bookmark-wrapper",
             div { id: "save-bookmark", "Save Your Work!" }
             div {
                 id: "save-bookmark-local",
                 class: "save-bookmark-type",
-                onclick: move |_| {
-                    #[cfg(target_arch = "wasm32")]
-                    {
-                        let server_state = consume_context::<Signal<ServerState>>();
-                        download_json(&*server_state.read(), "my.rudi.bookmark.json")
-                            .unwrap_or_else(|e| {
-                                log::error!("Failed to download server state as JSON file: {:?}", e);
-                            });
-                    }
-                },
+                onclick: onclick_local,
                 "- to your computer"
             }
             div { id: "save-bookmark-server", class: "save-bookmark-type", "- to the server" }

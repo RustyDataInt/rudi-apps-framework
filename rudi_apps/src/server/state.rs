@@ -9,7 +9,7 @@ use serde_json as json;
 
 /// `ServerState` holds the stateful, bookmarkable information about 
 /// the current state of the app (in contrast to `UiState` which is 
-/// not stateful).
+/// not stateful). Data are accessed used get, set, and check methods.
 #[derive(Clone, Deserialize, Serialize)]
 pub struct ServerState {
     // the first three fields determine the active content page
@@ -17,7 +17,7 @@ pub struct ServerState {
     app_name:      Option<String>,
     step_name:     Option<String>,
     // inputs and outcomes are collected over all content pages
-    // values are stored as JSON to allow for arbitrary types and structures
+    // values are stored as JSON to allow arbitrary types and structures
     inputs:   HashMap<String, json::Value>,
     outcomes: HashMap<String, json::Value>,
 }

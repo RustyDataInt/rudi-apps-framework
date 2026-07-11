@@ -14,17 +14,17 @@ const ICON_SIZE: u32 = 24;
 /// `ToggleSidebarLink` provides an icon link to toggle the sidebar.
 #[component]
 pub fn ToggleSidebarLink() -> Element {
+    let onclick = move |_| {
+        let mut ui_state = consume_context::<Signal<UiState>>();
+        let showing_app_steps = ui_state.read().showing_app_steps;
+        if ui_state.read().sidebar_open {
+            ui_state.set(UiState::close_sidebar(showing_app_steps));
+        } else {
+            ui_state.set(UiState::open_sidebar(showing_app_steps));
+        }
+    };
     rsx!{
-        button {
-            onclick: move |_| {
-                let mut ui_state = consume_context::<Signal<UiState>>();
-                let showing_app_steps = ui_state.read().showing_app_steps;
-                if ui_state.read().sidebar_open {
-                    ui_state.set(UiState::close_sidebar(showing_app_steps));
-                } else {
-                    ui_state.set(UiState::open_sidebar(showing_app_steps));
-                }
-            },
+        button { onclick,
             Tooltip { text: "Toggle the sidebar".to_string(),
                 Menu { size: ICON_SIZE }
             }
@@ -35,6 +35,7 @@ pub fn ToggleSidebarLink() -> Element {
 /// `GitVersions` provides an icon link to a modal with repo version metadata.
 #[component]
 pub fn GitVersions() -> Element {
+    // TODO: implement git version server function
     rsx!{
         button {
             FolderGit2 { size: ICON_SIZE }
@@ -42,7 +43,7 @@ pub fn GitVersions() -> Element {
     }
 }
 
-/// `ActiveUser` display the currently logged-in user.
+/// `ActiveUser` displays the currently logged-in user.
 #[component]
 pub fn ActiveUser() -> Element {
     let user = env::var("USER")
@@ -61,12 +62,12 @@ pub fn ActiveUser() -> Element {
     }
 }
 
-/// `DataDirectory` display the path the the server data directory.
+/// `DataDirectory` displays the path the the server data directory.
 #[component]
 pub fn DataDirectory() -> Element {
     let data_dir = env::var("RUDI_DATA_DIR")
         .map(|val| val.to_string())
-        .unwrap_or("RUDI_DATA_DIR not set".to_string());
+        .unwrap_or("!! RUDI_DATA_DIR not set !!".to_string());
     rsx!{
         div { id: "data-directory", {data_dir} }
     }

@@ -1,15 +1,14 @@
 //! Broadly reusable app components that establish page layout.
-//! These are organizing wrappers, not namespaced components.
 
 // modules
 mod fluid_page;
 mod app_step_page;
-mod data_panel;
+mod panels;
 
 // re-exports
 pub use fluid_page::*;
 pub use app_step_page::*;
-pub use data_panel::*;
+pub use panels::*;
 
 // imports
 use dioxus::prelude::*;

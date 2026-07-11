@@ -1,4 +1,4 @@
-//! UI components for the RuDI server application interface wrapper.
+//! UI components for the RuDI apps server.
 
 // modules
 mod shell;
@@ -16,15 +16,17 @@ pub use tooltip::*;
 pub use layout::*;
 pub use rudi_elements::*;
 
-// imports
-use dioxus::prelude::*;
+/// A `u16` representing the width of an input in pixels
+/// suitable for type-specific use in `use_context_provider`.
+#[derive(PartialEq, Clone)]
+pub struct InputWidth(pub u16);
 
 /// `UiState` holds ephemeral information about the current state 
 /// of the app (in contrast to `ServerState` which is stateful).
 #[derive(Clone, PartialEq)]
 pub struct UiState {
-    pub showing_app_steps:    bool,
-    pub sidebar_open:         bool,
+    pub showing_app_steps:    bool, // whether the sidebar is currently rendering app step tabs
+    pub sidebar_open:         bool, // whether the sidebar is currently open
 }
 impl UiState {
     /// Create a new `UiState` with app_steps open.
@@ -34,7 +36,7 @@ impl UiState {
             sidebar_open:      true,
         }
     }
-    /// Trigger a transition to a new `UiState` with no open sidebar.
+    /// Trigger a transition to a new `UiState` with the sidebar closed.
     pub fn close_sidebar(showing_app_steps: bool) -> Self {
         UiState {
             showing_app_steps: showing_app_steps,
@@ -48,14 +50,16 @@ impl UiState {
             sidebar_open:      true,
         }
     }
-    /// Trigger a transition to a new `UiState` showing app_step tabs.
+    /// Trigger a transition to a new `UiState` showing app_step tabs
+    /// in the open state.
     pub fn open_app_steps() -> Self {
         UiState {
             showing_app_steps: true,
             sidebar_open:      true,
         }
     }
-    /// Trigger a transition to a new `UiState` showing app_step instructions.
+    /// Trigger a transition to a new `UiState` showing app_step instructions
+    /// in the open state.
     pub fn open_instructions() -> Self {
         UiState {
             showing_app_steps: false,
@@ -64,7 +68,7 @@ impl UiState {
     }
 }
 
-/// A platform-agnostic async sleep helper
+/// A platform-agnostic async sleep for timing animations.
 pub async fn async_delay(delay_ms: u32) {
     #[cfg(not(feature = "server"))]
     {
@@ -73,15 +77,5 @@ pub async fn async_delay(delay_ms: u32) {
     #[cfg(feature = "server")]
     {
         tokio::time::sleep(std::time::Duration::from_millis(delay_ms as u64)).await;
-    }
-}
-
-/// A simple label for an input. Note that this label component 
-/// is just text, and does not claim a connection to the input 
-/// it is labeling.
-#[component]
-pub fn InputLabel(label: String) -> Element {
-    rsx! {
-        div { class: "rudi-input-label", "{label}" }
     }
 }

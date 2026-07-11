@@ -27,10 +27,9 @@ impl From<&RudiElement> for Namespace {
     }
 }
 
-/// A `RudiElement` is an extension of a Rust Dioxus `Element`
-/// that makes the underlying component and current value 
-/// stateful, namespaced, and serializable so that they are
-/// included in all bookmarks.
+/// A `RudiElement` is an extension of a Rust Dioxus `Element` that makes 
+/// the underlying component and current value stateful, namespaced, and 
+/// serializable so that they are included in all bookmarks.
 #[derive(Clone, PartialEq)]
 pub struct RudiElement{
     pub namespace: Namespace, // of the parent, NOT including the name of this element
@@ -87,6 +86,8 @@ impl RudiElement {
     }
 
     /// Get the recorded value of this `RudiElement` from the server state.
+    /// By using `read()`, `get_state` subscribes to the changing server state 
+    /// during app use.
     pub fn get_state<T: DeserializeOwned>(&self) -> Option<T> {
         let server_state = use_context::<Signal<ServerState>>();
         let value_opt = server_state
@@ -96,11 +97,11 @@ impl RudiElement {
         value_opt
     }
 
-    /// Get the initial value of a child of this `RudiElement` from 
-    /// the server state, with a default value. This function is used
-    /// to restore a bookmarked state of a child on app load.
-    /// By using `peek`, we do not subscribe to the changing server
-    /// state during app use, so this function executes once per call.
+    /// Get the initial value of a child of this `RudiElement` from the
+    /// server state, with a default value. This function is used to restore 
+    /// a bookmarked state of a child on app load. By using `peek`, 
+    /// `get_initial_state` does not subscribe to the changing server state 
+    /// during app use, so it executes once per call.
     pub fn get_initial_state<T: DeserializeOwned>(&self, child_name: &str, default: T) -> T {
         let server_state = consume_context::<Signal<ServerState>>();
         let value_opt = server_state

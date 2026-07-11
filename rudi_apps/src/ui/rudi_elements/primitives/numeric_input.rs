@@ -19,37 +19,31 @@ where T: 'static +
     IntoAttributeValue
 {
     // required
-    name:      String,
-    value:     Signal<T>,
+    name:  String,
+    value: Signal<T>,
     // optional
-    label:     Option<String>,
-    width:     Option<String>,
-    min:       Option<T>,
-    max:       Option<T>,
-    step:      Option<T>,
+    label: Option<String>,
+    width: Option<u16>,
+    min:   Option<T>,
+    max:   Option<T>,
+    step:  Option<T>,
 }
 
 /// A `NumericInput` creates a stateful  HTML `input<type="number">` 
 /// element whose value is cast to a caller-defined numeric data type.
 /// 
-/// ## Required Properties
+/// `name` defines the input id as `<namespace>-<name>`, where 
+/// `<namespace>` is the id of the parent.
 /// 
-/// The `name` property defines the input id as
-/// `<namespace>-<name>`, where `<namespace>` is the id of the parent.
+/// `value` is a `Signal<T>` that is updated whenever the user changes 
+/// the input value.
 /// 
-/// The `value` property is a `Signal<T>` that is updated whenever the 
-/// user changes the input value.
+/// If provided, `label` will place a text label above the input.
 /// 
-/// ## Optional Properties
+/// `width` is the input pixel width that defaults to `InputWidth(75)`.
 /// 
-/// If provided, the `label` property will place that text label above
-/// the input.
-/// 
-/// The `width` property is a requested CSS `width` that defaults to "100%".
-/// 
-/// If provided, properties `min`, `max`, and `step` constrain the value 
-/// to the specified range and dictate the behavior of the up/down arrows 
-/// in the input field. 
+/// `min`, `max`, and `step` constrain the input to the specified range 
+/// and dictate the behavior of the up/down arrows in the input field. 
 #[component]
 pub fn NumericInput<T>(mut props: NumericProps<T>) -> Element 
 where T: 'static + 
@@ -60,15 +54,18 @@ where T: 'static +
 {
     let this = RudiElement::new::<T>(&props.name);
     use_context_provider(|| Namespace::from(&this));
-    let prop_width = props.width.unwrap_or("100%".to_string());
+    let default_input_width = use_context::<InputWidth>();
+    let prop_width = props.width.unwrap_or(default_input_width.0 * 2 + 5);
     rsx!{
-        div { class: "input-wrapper numeric-input-wrapper",
+        div {
+            class: "input-wrapper numeric-input-wrapper",
+            style: "width: {prop_width}px;",
             if props.label.is_some() {
                 Label { html_for: this.id.clone(), "{props.label.as_ref().unwrap()}" }
             }
             Input {
                 id: this.id.clone(),
-                style: "width: {prop_width};",
+                style: "width: 100%;",
                 r#type: "number",
                 value: props.value,
                 min: props.min,

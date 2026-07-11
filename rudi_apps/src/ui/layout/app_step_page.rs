@@ -2,7 +2,7 @@
 
 // imports
 use dioxus::prelude::*;
-use dioxus_icons::lucide::{Info, Settings};
+use dioxus_icons::lucide::Info;
 use crate::server::*;
 use crate::ui::*;
 
@@ -67,16 +67,6 @@ fn RudiAppStepHeader(app_step_name: String) -> Element {
                                 Tooltip { text: "Toggle app step instructions".to_string(),
                                     Info { size: ICON_SIZE }
                                 }
-                            }
-                        }
-                    }
-                    if app_step_config.settings.is_some() {
-                        div { class: "app-step-header-icon",
-                            div {
-                                onclick: move |_| {
-                                    let mut _ui_state = consume_context::<Signal<UiState>>();
-                                }, // TODO: settings modal
-                                Settings { size: ICON_SIZE }
                             }
                         }
                     }

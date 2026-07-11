@@ -4,7 +4,7 @@
 #main { /* the main div outer wrapper is created by Dioxus */
     height: 100vh;
 }
-#main-grid-container {
+#page-grid-container {
     width: 100%;
     height: 100%;
     display: grid;
@@ -20,24 +20,24 @@
 .hidden-sidebar {
     grid-template-columns: var(--hidden-sidebar-width) 1fr;
 }
-#suite-label-wrapper, #header-content-wrapper, #app-steps-navbar-wrapper {
+#page-suite-label-wrapper, #page-header-content-wrapper, #app-steps-navbar-wrapper {
     background-color: var(--header-sidebar-background);
 }
-#suite-label-wrapper, #header-content-wrapper {
+#page-suite-label-wrapper, #page-header-content-wrapper {
     color: var(--header-color);
     height: var(--header-height);
     line-height: var(--header-height);
     border-bottom: var(--banner-border-width) solid var(--header-border-dark);
     cursor: default;
 }
-#suite-label-wrapper, #app-steps-navbar-wrapper, #instructions-wrapper {
+#page-suite-label-wrapper, #app-steps-navbar-wrapper, #instructions-wrapper {
     border-right: var(--banner-border-width) solid var(--header-border-dark);
 }
-#suite-label-wrapper, #app-steps-navbar-wrapper {
+#page-suite-label-wrapper, #app-steps-navbar-wrapper {
     text-align: center;
     white-space: nowrap;
 }
-#suite-label-wrapper {
+#page-suite-label-wrapper {
     border-bottom: var(--banner-border-width) solid var(--header-border-light);
     padding: 0;
 }
@@ -63,43 +63,43 @@
 /* -----------------------------------------------------------------------------
    main page header: suite label and header content area
 ----------------------------------------------------------------------------- */
-/* suite label */
-#suite-label{
+/* page suite label */
+#page-suite-label{
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 1.2em;
     /* cursor: pointer; */
 }
-/* #suite-label:hover {
+/* #page-suite-label:hover {
     background-color: var(--hover-mask-dark);
 } */
-/* header content area */
-#header-content {
+/* page header content area */
+#page-header-content {
     margin: 0 var(--standard-padding);
 }
-#header-content-icons {
+#page-header-content-icons {
     float: left;
 }
-#header-content-icons > button {
+#page-header-content-icons > button {
     margin-top: 13px;
     background-color: transparent;
     color: var(--header-sidebar-color);
     border: none;
 }
-#header-content-icons > button:hover {
+#page-header-content-icons > button:hover {
     color: var(--header-sidebar-color-active);
     cursor: pointer;
 }
-#header-content-server-data {
+#page-header-content-server-data {
     margin-top: 5px;
     float: right;
     text-align: right;
     color: var(--header-sidebar-color);
 }
-#header-content-server-data > div {
+#page-header-content-server-data > div {
     line-height: var(--half-header-height);
 }
-#header-content-server-data > div:hover {
+#page-header-content-server-data > div:hover {
     color: var(--header-sidebar-color-active);
 }
 /* -----------------------------------------------------------------------------
@@ -221,22 +221,73 @@
     color: var(--header-sidebar-background);
 }
 /* -----------------------------------------------------------------------------
-   data panels, i.e., rudi cards
+   data display panels
 ----------------------------------------------------------------------------- */
-.data-panel {
+.display-panel {
     margin:  var(--half-standard-padding);
     border: 1px solid var(--header-sidebar-background);
     border-radius: 5px;
     box-shadow: 2px 2px 3px var(--header-border-dark);
     background-color: white;
 }
-.data-panel-title {
+.display-panel-title {
     border: 1px solid var(--header-sidebar-background);
     border-radius: 5px 5px 0 0;
     background-color: var(--data-panel-title-background);
     color: var(--header-color);
     padding:  var(--half-standard-padding);
+    white-space: nowrap;
+    overflow: hidden;
 }
-.data-panel-contents {
+.display-panel-title-full {
+    height: var(--panel-header-full-height);
+    line-height: var(--panel-header-full-height);
+}
+.display-panel-title-empty {
+    height: var(--panel-header-empty-height);
+    line-height: var(--panel-header-empty-height);
+    position: relative;
+}
+.display-panel-contents {
     padding:  var(--half-standard-padding);
+}
+.display-panel-title-empty:hover {
+    background-color: var(--header-sidebar-background-active);
+    cursor: pointer;
+}
+.display-panel-plus-minus {
+    float: right;
+}
+.display-panel-ellipsis {
+    position: absolute;
+    top: 0;
+    right: var(--standard-padding);
+}
+.display-panel-icon:hover {
+    color: white;
+    cursor: pointer;
+}
+/* -----------------------------------------------------------------------------
+   input panels and user inputs
+----------------------------------------------------------------------------- */
+.input-panel-contents {
+    display: flex;
+    flex-direction: column;
+    gap: var(--standard-padding);
+}
+.input-panel-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.input-wrapper label {
+    font-size: .95em;
+    font-weight: 600;
+    margin: 0 0 5px 5px;
+}
+.select-input-wrapper button {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

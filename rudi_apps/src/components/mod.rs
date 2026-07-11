@@ -2,3 +2,7 @@
 pub mod button;
 pub mod input;
 pub mod label;
+pub mod checkbox;
+pub mod radio_group;
+pub mod select;
+pub mod switch;

@@ -107,8 +107,6 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
                     }
                     let app_step_instructions_file = app_dir.path().join(format!("src/{}/instructions.md", app_step_config.name));
                     app_step_config.instructions = fs::read_to_string(&app_step_instructions_file).ok();
-                    let app_step_settings_file = app_dir.path().join(format!("src/{}/settings.yml", app_step_config.name));
-                    app_step_config.settings = fs::read_to_string(&app_step_settings_file).ok();
                     add_app_step_match(
                         &mut app_matcher_file, 
                         &app_config.name, 
