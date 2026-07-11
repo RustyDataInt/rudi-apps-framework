@@ -59,6 +59,7 @@
     text-align: left;
     overflow: auto;
     position: relative;
+    padding-bottom: 25px;
 }
 /* -----------------------------------------------------------------------------
    main page header: suite label and header content area

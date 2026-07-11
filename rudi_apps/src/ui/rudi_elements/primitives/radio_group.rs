@@ -1,23 +1,21 @@
-//! `RudiElement` support for a Dioxus Select, which wraps
-//! an HTML `select` element, as component `SelectInput`.
+//! `RudiElement` support for a Dioxus RadioGroup, which wraps
+//! a set of HTML `radio` elements, as component `RadioGroupInput`.
 
 // imports
 use std::str::FromStr;
 use std::fmt::Display;
 use serde::{de::DeserializeOwned, Serialize};
 use dioxus::prelude::*;
-use dioxus::dioxus_core::IntoAttributeValue;
-use crate::components::{label::Label, select::{Select, SelectOption}};
+use crate::components::{label::Label, radio_group::{RadioGroup, RadioItem}};
 use crate::ui::*;
 
-/// Dioxus Properties for a `SelectInput`.
+/// Dioxus Properties for a `RadioGroupInput`.
 #[derive(PartialEq, Clone, Props)]
-pub struct SelectInputProps<T> 
+pub struct RadioGroupInputProps<T> 
 where T: 'static + 
-    Clone + 
-    PartialEq + 
+    Clone + PartialEq + 
     Serialize + DeserializeOwned + FromStr + 
-    IntoAttributeValue + Display
+    Display
 {
     // required
     name:    String,
@@ -29,7 +27,7 @@ where T: 'static +
     width: Option<u16>,
 }
 
-/// A `SelectInput` creates a stateful  HTML `select` element.
+/// A `RadioGroupInput` creates a stateful HTML radio group.
 /// 
 /// `choices` is a vector of values of type `T` used to populate 
 /// the select options, `labels` is an optional vector of strings 
@@ -44,19 +42,20 @@ where T: 'static +
 /// 
 /// If provided, `label` will place a text label above the input.
 /// 
-/// `width` is the input pixel width that defaults to `InputWidth(155)`.
+/// `width` is the input pixel width that defaults to `InputWidth(235)`,
+/// which mean by default it takes up three single-column input slots.
 #[component]
-pub fn SelectInput<T>(mut props: SelectInputProps<T>) -> Element 
+pub fn RadioGroupInput<T>(mut props: RadioGroupInputProps<T>) -> Element 
 where T: 'static + 
-    Clone + 
-    PartialEq + 
+    Clone + PartialEq + 
     Serialize + DeserializeOwned + FromStr + 
-    IntoAttributeValue + Display
+    Display
 {
     let this = RudiElement::new::<T>(&props.name);
     use_context_provider(|| Namespace::from(&this));
+    
     let default_input_width = use_context::<InputWidth>();
-    let prop_width = props.width.unwrap_or(default_input_width.0 * 2 + 5);
+    let prop_width = props.width.unwrap_or(default_input_width.0 * 3 + 5 * 2);
 
     let labels = props.labels.clone()
         .unwrap_or(props.choices.iter().map(|c| c.to_string()).collect());
@@ -65,27 +64,22 @@ where T: 'static +
         .enumerate()
         .map(|(i, choice)| {
             rsx! {
-                SelectOption::<T> {
-                    index: i,
-                    value: choice.clone(),
-                    text_value: "{labels[i]}",
-                    "{labels[i]}"
-                }
+                RadioItem { index: i, value: choice.to_string(), "{labels[i]}" }
             }
         });
 
     rsx!{
         div {
-            class: "input-wrapper select-input-wrapper",
+            class: "input-wrapper radio-group-input-wrapper",
             style: "width: {prop_width}px;",
             if props.label.is_some() {
                 Label { html_for: this.id.clone(), "{props.label.as_ref().unwrap()}" }
             }
-            Select::<T> {
+            RadioGroup {
                 width: "100%",
                 default_value: props.value.read().clone(),
-                on_value_change: move |new| {
-                    if let Some(new) = new {
+                on_value_change: move |new: String| {
+                    if let Ok(new) = new.parse::<T>() {
                         this.set_state::<T>(&new);
                         props.value.set(new);
                     }

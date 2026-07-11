@@ -40,7 +40,8 @@ where T: 'static +
 /// 
 /// If provided, `label` will place a text label above the input.
 /// 
-/// `width` is the input pixel width that defaults to `InputWidth(75)`.
+/// `width` is the input pixel width that defaults to `InputWidth(155)`,
+/// which mean by default it takes up two single-column input slots.
 /// 
 /// `min`, `max`, and `step` constrain the input to the specified range 
 /// and dictate the behavior of the up/down arrows in the input field. 
@@ -54,8 +55,10 @@ where T: 'static +
 {
     let this = RudiElement::new::<T>(&props.name);
     use_context_provider(|| Namespace::from(&this));
+
     let default_input_width = use_context::<InputWidth>();
     let prop_width = props.width.unwrap_or(default_input_width.0 * 2 + 5);
+    
     rsx!{
         div {
             class: "input-wrapper numeric-input-wrapper",

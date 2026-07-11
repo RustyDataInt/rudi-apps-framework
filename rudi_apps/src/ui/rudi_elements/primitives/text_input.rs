@@ -29,14 +29,18 @@ pub struct TextInputProps {
 /// 
 /// If provided, `label` will place a text label above the input.
 /// 
-/// `width` is the input pixel width that defaults to `InputWidth(155)`,
-/// which mean by default it takes up two single-column input slots.
+/// `width` is the input pixel width that defaults to `InputWidth(235)`,
+/// which mean by default it takes up three single-column input slots.
+/// 
+/// If provided, `placeholder` will be shown in empty text inputs.
 #[component]
 pub fn TextInput(mut props: TextInputProps) -> Element {
     let this = RudiElement::new::<String>(&props.name);
     use_context_provider(|| Namespace::from(&this));
+
     let default_input_width = use_context::<InputWidth>();
     let prop_width = props.width.unwrap_or(default_input_width.0 * 3 + 5 * 2);
+    
     rsx!{
         div {
             class: "input-wrapper text-input-wrapper",

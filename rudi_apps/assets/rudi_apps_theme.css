@@ -35,6 +35,7 @@
 :root {
     --hover-mask-dark: #ffffff11;
     --code-background-color: #e4e4e4;
+    --code-color: black;
     --banner-border-width: 1px;
     --header-height: 50px;
     --half-header-height: 20px;
@@ -83,11 +84,11 @@ p {
     max-width: var(--max-reading-width);
     margin: var(--standard-padding) 0;
 }
-code {
+pre:has(code), code {
     font-family: 'Courier New', Courier, monospace;
     font-weight: 600;
     font-size: 0.95em;
-    color: var(--header-sidebar-background);
+    color: var(--code-color);
     background-color: var(--code-background-color);
     border-radius: 5px;
     padding: 0 var(--half-standard-padding);

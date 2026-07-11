@@ -28,14 +28,17 @@ pub struct BooleanSwitchProps{
 /// 
 /// If provided, `label` will place a text label above the input.
 /// 
-/// `width` is the input pixel width that defaults to `InputWidth(75)`.
+/// `width` is the input pixel width that defaults to `InputWidth(75)`,
+/// which mean by default it takes up one single-column input slot.
 #[component]
 pub fn BooleanSwitch(mut props: BooleanSwitchProps) -> Element 
 {
     let this = RudiElement::new::<bool>(&props.name);
     use_context_provider(|| Namespace::from(&this));
+
     let default_input_width = use_context::<InputWidth>();
     let prop_width = props.width.unwrap_or(default_input_width.0);
+    
     rsx!{
         div {
             class: "input-wrapper switch-input-wrapper",
@@ -47,7 +50,7 @@ pub fn BooleanSwitch(mut props: BooleanSwitchProps) -> Element
                     "{props.label.as_ref().unwrap()}"
                 }
             }
-            div { text_align: "center",
+            div { text_align: "center", padding_top: "5px",
                 Switch {
                     checked: *props.value.read(),
                     on_checked_change: move |new| {

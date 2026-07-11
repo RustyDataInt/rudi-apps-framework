@@ -1,7 +1,12 @@
 .dx-radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
+    flex-direction: row; /* these values were edited in rudi_apps relative to Dioxus*/
+    gap: .75rem;
+    display: flex;
+    white-space: nowrap;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    padding-top: 8px;
 }
 
 .dx-radio-item {
@@ -13,7 +18,7 @@
   background-color: transparent;
   color: var(--secondary-color-4);
   font-size: 14px;
-  gap: .75rem;
+  gap: .35rem; /* these values were edited in rudi_apps relative to Dioxus*/
 }
 
 .dx-radio-item::before {
