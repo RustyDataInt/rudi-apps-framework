@@ -22,9 +22,13 @@ gloo-timers = { version = "0.4", features = ["futures"], optional = true }
 # rendering
 pulldown-cmark = "0.13"
 
+# data objects for tables and plots
+rlike = { git = "https://github.com/MiDataInt/rlike", branch = "main" }
+
 # image processing
 base64 = "0.22"
 image = { version = "0.25", default-features = false, features = ["png"] } 
+plotters = "0.3"
 
 # data transport support
 toml = "1.1"

@@ -292,3 +292,41 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* -----------------------------------------------------------------------------
+   table panel tables
+----------------------------------------------------------------------------- */
+.table-panel-table {
+    outline: 1px solid #666;
+    border-collapse: collapse;
+    width: 100%;
+}
+.table-panel-table tr:nth-child(even) {
+  background-color: #fdfdfd;
+}
+.table-panel-table tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+.table-panel-table-header {
+    background-color: #f0f0f0 !important;
+    border-bottom: 1px solid black !important;
+}
+.table-panel-table tr:hover {
+    background-color: #f8e9c2;
+}
+.table-panel-table th,
+.table-panel-table td {
+    padding: 2px;
+    font-size: 0.9em;
+    border: 1px solid #ccc;
+}
+.table-panel-table th {
+    border-bottom: 1px solid #666;
+    text-align: left;
+}
+.table-panel-table td {
+    text-align: right;
+}
+.table-panel-table svg {
+    float: right;
+    padding-top: 2px;
+}
