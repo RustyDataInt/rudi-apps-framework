@@ -14,6 +14,14 @@
     --content-color: #391d11;
     --hover-background-light: #491a0611;
     --data-panel-title-background: #571f07;
+    --table-black: #000;
+    --table-dark-grey: #666;
+    --table-light-grey: #ccc;
+    --table-color: #444;
+    --table-row-background-even: #fdfdfd;
+    --table-row-background-odd: #f6f6f6;
+    --table-row-background-header: #f0f0f0;
+    --table-row-background-active: #f8e9c2;
 }
 /* University of Michigan color theme */
 /* :root {
