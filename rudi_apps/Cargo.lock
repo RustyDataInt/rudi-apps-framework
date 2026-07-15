@@ -4601,6 +4601,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "plotters-canvas"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9126f053e70c9a2f2dd6998912a3536071e909fd37bde74b671402bfa441fc00"
+dependencies = [
+ "js-sys",
+ "plotters-backend",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "plotters-svg"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5311,11 +5323,13 @@ dependencies = [
  "dioxus",
  "dioxus-icons",
  "dioxus-primitives",
+ "dioxus-web",
  "env_logger",
  "gloo-timers 0.4.0",
  "image 0.25.10",
  "log",
  "plotters",
+ "plotters-canvas",
  "pulldown-cmark",
  "rlike",
  "serde",

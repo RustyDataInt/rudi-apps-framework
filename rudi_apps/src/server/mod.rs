@@ -21,6 +21,7 @@
 // modules
 pub mod config;
 pub mod state;
+pub mod data;
 
 // imports
 use std::path::Path;
@@ -33,6 +34,7 @@ use dioxus::prelude::*;
 // re-exports
 pub use config::*;
 pub use state::*;
+pub use data::*;
 
 // assets
 pub static RUDI_LOGO_ICO:       Asset = asset!("/assets/favicon.ico");

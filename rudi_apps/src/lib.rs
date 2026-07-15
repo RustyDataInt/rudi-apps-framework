@@ -9,5 +9,6 @@
 pub mod components; // where dx components installs them
 pub mod server;
 pub mod ui;
+pub mod plot;
 pub mod api;
 pub mod prelude;

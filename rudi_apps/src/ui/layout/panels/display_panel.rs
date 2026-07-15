@@ -1,8 +1,7 @@
-//! A component for a standardized app step display panel.
-//! This is a wrapper element that defines a RuDI namespace 
-//! for its children. A `DisplayPanel` is use by `InputPanel`, 
-//! `PlotPanel`, `TablePanel`, etc., but can also be used as a 
-//! generic panel for any content.
+//! A component for a standardized app step display panel. This is a wrapper 
+//! element that defines a RuDI namespace for its children. A `DisplayPanel` is 
+//! used by `InputPanel`, `PlotPanel`, `TablePanel`, etc., but can also be used 
+//! as a generic panel for any content.
 
 // imports
 use dioxus::prelude::*;
@@ -16,9 +15,9 @@ const ICON_SIZE: u32 = 20;
 #[derive(PartialEq, Clone, Props)]
 pub struct DisplayPanelProps {
     // required
-    name:      String,
+    name: String,
     // optional
-    title:     Option<String>,
+    title: Option<String>,
     // header_links: Option<Vec<HeaderLink>>,
     // from FluidSpanProps
     n_columns: u8,
@@ -26,18 +25,18 @@ pub struct DisplayPanelProps {
     children:  Element,
 }
 
-/// A component for a standardized app step display panel
-/// with a header bar containing action link icons.
+/// A component for a standardized app step display panel with a header bar 
+/// containing action link icons.
 /// 
-/// `name` defines the input id as `<namespace>-<name>`, where 
+/// `name` is used to define the input id as `<namespace>-<name>`, where 
 /// `<namespace>` is the id of the parent.
 /// 
-/// If provided, `title` is placed in a thicker header bar with
-/// a +/- expand/collapse link. If omitted, a thin solid header 
-/// bar with an ellipsis icon is itself activated for expand/collapse.
+/// If provided, `title` is placed in a thicker header bar with a +/- 
+/// expand/collapse link. If omitted, a thin solid header bar with an ellipsis 
+/// icon is itself activated for expand/collapse.
 /// 
-/// `n_columns` and `min_width` are passed to the `FluidSpan` to control
-/// the size of the panel in the `FluidPage`.
+/// `n_columns` and `min_width` are passed to the `FluidSpan` to control the 
+/// size of the panel in the `FluidPage`.
 #[component]
 pub fn DisplayPanel(props: DisplayPanelProps) -> Element {
     let this = RudiElement::new::<()>(&props.name);

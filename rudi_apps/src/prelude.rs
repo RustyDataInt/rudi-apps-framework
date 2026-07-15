@@ -2,4 +2,5 @@
 
 pub use crate::server::*;
 pub use crate::ui::*;
+pub use crate::plot::*;
 // pub use crate::api::*;

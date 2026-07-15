@@ -7,6 +7,7 @@ edition = "2021"
 
 # dioxus web app framework
 dioxus = { version = "0.7", features = ["fullstack"] }
+dioxus-web = "0.7"
 dioxus-icons = { version = "0.1.0", default-features = false }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version = "0.0.1", default-features = false }
 
@@ -14,7 +15,7 @@ dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version 
 tokio = { version = "1", features = ["full"], optional = true}
 
 # web-only wasm-javascript bindings
-web-sys = { version = "0.3", features = ["Document", "Blob", "BlobPropertyBag", "HtmlAnchorElement", "Url"], optional = true }
+web-sys = { version = "0.3", features = ["Document", "Blob", "BlobPropertyBag", "HtmlAnchorElement", "Url", "HtmlCanvasElement"], optional = true }
 wasm-bindgen = { version = "0.2", optional = true }
 wasm-bindgen-futures = { version = "0.4", optional = true }
 gloo-timers = { version = "0.4", features = ["futures"], optional = true }
@@ -29,6 +30,7 @@ rlike = { git = "https://github.com/MiDataInt/rlike", branch = "main" }
 base64 = "0.22"
 image = { version = "0.25", default-features = false, features = ["png"] } 
 plotters = "0.3"
+plotters-canvas = "0.3"
 
 # data transport support
 toml = "1.1"

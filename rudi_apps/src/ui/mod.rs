@@ -16,6 +16,11 @@ pub use tooltip::*;
 pub use layout::*;
 pub use rudi_elements::*;
 
+// constants
+pub const DEFAULT_INPUT_WIDTH: u16 = 75; // i.e., a single-column input
+pub const SCREEN_DPI: u16 = 96;
+pub const POINTS_PER_INCH: f64 = 72.0;
+
 /// A `u16` representing the width of an input in pixels
 /// suitable for type-specific use in `use_context_provider`.
 #[derive(PartialEq, Clone)]

@@ -1,6 +1,6 @@
-//! A component for a standardized `DisplayPanel` carrying a single
-//! interactive table, built from an `rlike::DataFrame` and rendered 
-//! without additional dependencies.
+//! A component for a standardized `DisplayPanel` carrying a single interactive 
+//! table, built from an `rlike::DataFrame` and rendered without additional 
+//! dependencies.
 
 // imports
 use dioxus::prelude::*;
@@ -10,7 +10,6 @@ use crate::ui::*;
 use super::*;
 
 // constants
-const DEFAULT_INPUT_WIDTH:  u16 = 75; // i.e., a single-column input width, in pixels
 const MAJOR_SORT_ICON_SIZE: u16 = 20;
 const MINOR_SORT_ICON_SIZE: u16 = 16;
 const DEFAULT_MAX_ROWS:     u8 = 20;
@@ -38,10 +37,9 @@ impl TableConfig {
     /// Create a new `TableConfig` with the given row selection mode.
     /// 
     /// Any initial default sorting and filtering should be applied to a 
-    /// `DataFrame` by the caller prior to passing it to `TablePanel`. 
-    /// The user will be able to resort as needed, or apply additional 
-    /// filters, but can never recover rows not present in the `DataFrame` 
-    /// passed to `TablePanel`.
+    /// `DataFrame` by the caller prior to passing it to `TablePanel`. The user 
+    /// will be able to resort as needed, or apply additional filters, but can 
+    /// never recover rows not present in the `DataFrame` passed to `TablePanel`.
     pub fn new(select_mode: TableSelectMode) -> Self {
         Self {
             columns: None,
@@ -53,14 +51,12 @@ impl TableConfig {
             select_mode:  select_mode,
         }
     }
-    /// Create a new `TableConfig` with the given columns and row
-    /// selection mode.
+    /// Create a new `TableConfig` with the given columns and row selection mode.
     /// 
     /// Any initial default sorting and filtering should be applied to a 
-    /// `DataFrame` by the caller prior to passing it to `TablePanel`. 
-    /// The user will be able to resort as needed, or apply additional 
-    /// filters, but can never recover rows not present in the `DataFrame` 
-    /// passed to `TablePanel`.
+    /// `DataFrame` by the caller prior to passing it to `TablePanel`. The user 
+    /// will be able to resort as needed, or apply additional filters, but can 
+    /// never recover rows not present in the `DataFrame` passed to `TablePanel`.
     pub fn new_with_columns(columns: &[&str], select_mode: TableSelectMode) -> Self {
         Self {
             columns: Some(columns.iter().map(|s| s.to_string()).collect()),
@@ -93,17 +89,16 @@ where T: 'static + Clone + PartialEq + PartialOrd
     min_width: Option<String>,
 }
 
-/// A component for a standardized display panel carrying a single
-/// interactive table rendered without additional dependencies.
+/// A component for a standardized display panel carrying a single interactive 
+/// table rendered without additional dependencies.
 /// 
-/// A `TablePanel` requires a value for either `data` or `data_frame` 
-/// to provide the data to display as a `Vec<T>` or `rlike::DataFrame`, 
-/// respectively.
+/// A `TablePanel` requires a value for either `data` or `data_frame` to provide 
+/// the data to display as a `Vec<T>` or `rlike::DataFrame`, respectively.
 /// 
-/// `config` provides the instructions for how to intially display 
-/// the table; these initial values may then be modified by the user.
+/// `config` provides instructions for how to intially display the table; these 
+/// initial values may then be modified by the user.
 /// 
-/// `name` defines the input id as `<namespace>-<name>`, where 
+/// `name` is used to define the input id as `<namespace>-<name>`, where 
 /// `<namespace>` is the id of the parent.
 /// 
 /// If provided, `title` will be displayed in the panel header, otherwise
