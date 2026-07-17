@@ -9,11 +9,14 @@ mod overlay;
 // pub use config::*;
 
 // imports
+use std::ops::Range;
+use std::fmt::Debug;
 use dioxus::prelude::*;
 // use image::codecs::png::PngEncoder as RgbToPng;
 // use image::{ColorType, ImageEncoder};
 // use base64::{engine::general_purpose::STANDARD as PngToBase64, Engine as _};
-use rlike::data_frame::DataFrame;
+use plotters::coord::ranged1d::{AsRangedCoord, ValueFormatter};
+use rlike::data_frame::column::get::ColVec;
 use crate::ui::*;
 use crate::plot::*;
 use super::*;
@@ -21,14 +24,19 @@ use super::*;
 
 /// Dioxus Properties for an `PlotPanel`.
 #[derive(PartialEq, Clone, Props)]
-pub struct PlotPanelProps<T, X, Y> 
-where T: 'static + Clone + PartialEq + PartialOrd,
-      X: 'static + Clone + PartialEq + PartialOrd,
-      Y: 'static + Clone + PartialEq + PartialOrd
+pub struct PlotPanelProps<X, Y> 
+where X: 'static + Default + Clone + Copy + PartialEq + PartialOrd + Debug,
+      Y: 'static + Default + Clone + Copy + PartialEq + PartialOrd + Debug,
+      Range<X>: AsRangedCoord<Value = X>,
+      Range<Y>: AsRangedCoord<Value = Y>,
+      <Range<X> as AsRangedCoord>::CoordDescType: ValueFormatter<X>,
+      <Range<Y> as AsRangedCoord>::CoordDescType: ValueFormatter<Y>,
+      Vec<Option<X>>: ColVec,
+      Vec<Option<Y>>: ColVec,
 {
     // required
-    data:       Option<Signal<Vec<T>>>, // either `data` or `data_frame` is required
-    data_frame: Option<Signal<DataFrame>>,
+    data_vec:   Option<Resource<DataSource>>, // either `data` or `data_frame` is required
+    data_frame: Option<Resource<DataSource>>,
     config:     Signal<PlotConfig<X, Y>>,
     // optional
     default_input_width: Option<InputWidth>,
@@ -57,16 +65,22 @@ where T: 'static + Clone + PartialEq + PartialOrd,
 /// `n_columns` and `min_width` are passed to the `FluidSpan` to control
 /// the size of the panel in the `FluidPage`.
 #[component]
-pub fn PlotPanel<T, X, Y>(props: PlotPanelProps<T, X, Y>) -> Element 
+pub fn PlotPanel<T, X, Y>(props: PlotPanelProps<X, Y>) -> Element 
 where T: 'static + Clone + PartialEq + PartialOrd,
-      X: 'static + Clone + PartialEq + PartialOrd,
-      Y: 'static + Clone + PartialEq + PartialOrd
+      X: 'static + Default + Clone + Copy + PartialEq + PartialOrd + Debug,
+      Y: 'static + Default + Clone + Copy + PartialEq + PartialOrd + Debug,
+      Range<X>: AsRangedCoord<Value = X>,
+      Range<Y>: AsRangedCoord<Value = Y>,
+      <Range<X> as AsRangedCoord>::CoordDescType: ValueFormatter<X>,
+      <Range<Y> as AsRangedCoord>::CoordDescType: ValueFormatter<Y>,
+      Vec<Option<X>>: ColVec,
+      Vec<Option<Y>>: ColVec,
 {
     let default_input_width = props.default_input_width
         .unwrap_or(InputWidth(DEFAULT_INPUT_WIDTH));
     use_context_provider(|| default_input_width);
 
-    let df = get_df(props.data, props.data_frame, false);
+    let df = get_df::<T>(props.data_vec, props.data_frame, true);
     let grid = use_memo(move || {
         let config = &*props.config.read();
         Some(PlotGridConfig::new(&[config], 1, 1)) // a single plot in a 1x1 grid
@@ -74,15 +88,33 @@ where T: 'static + Clone + PartialEq + PartialOrd,
     let canvas_id = use_signal(|| None::<String>);
 
     use_effect(move || {
-        let Some(df) = df else { return; };
-        let df = &*df.read();
+        let df = df.unwrap();
+        let Some(df) = &*df.read() else { return; };
         let config = &*props.config.read();
         let Some(grid) = &*grid.read() else { return; };
         let Some(canvas_id) = &*canvas_id.read() else { return; };
         // async move {
         // }
-        draw_plots(df, &[config], grid, canvas_id);
+        draw_plots(df, &[config], grid, canvas_id).unwrap_or_else(|e|{
+            log::error!("draw_plots failed: {}", e);
+        })
     });
+
+    let panel_contents = if let Some(_df) = &*df.unwrap().read() {
+        rsx!{
+            div { class: "plot-panel-contents",
+                PlotCanvas { grid, canvas_id }
+            }
+        }
+    } else {
+        rsx!{
+            div { class: "display-panel-error", "Waiting for data" }
+        }
+    };
+    //                 PlotCanvas { grid, canvas_id }
+    //                             // PlotPanelOverlay { df, config: props.config }
+    //             // PlotPanelCrosshairs {}
+    // let df = get_df(props.data, props.data_frame, false);
 
     rsx!{
         DisplayPanel {
@@ -90,15 +122,7 @@ where T: 'static + Clone + PartialEq + PartialOrd,
             title: props.title,
             n_columns: props.n_columns,
             min_width: props.min_width,
-            if let Some(df) = df {
-                div { class: "plot-panel-contents",
-                    PlotCanvas { grid, canvas_id }
-                                // PlotPanelOverlay { df, config: props.config }
-                // PlotPanelCrosshairs {}
-                }
-            } else {
-                div { class: "display-panel-error", "Missing data!" }
-            }
+            {panel_contents}
         }
     }
 }

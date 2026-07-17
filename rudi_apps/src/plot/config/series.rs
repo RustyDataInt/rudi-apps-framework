@@ -1,5 +1,8 @@
 //! Handle the data series for a plot.
 
+// imports
+use plotters::prelude::*;
+
 /// Drawing types for a plot data series.
 #[derive(PartialEq, Clone)]
 pub enum SeriesType {
@@ -12,7 +15,7 @@ pub enum SeriesType {
 }
 
 /// Accessible line and point colors for a plot data series.
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Copy)]
 pub enum SeriesColor {
     Blue,
     Red,
@@ -21,21 +24,21 @@ pub enum SeriesColor {
 }
 impl SeriesColor {
     /// Return the accessible RGB color values for a `SeriesColor`.
-    pub fn get_rgb(&self) -> (u8, u8, u8) {
+    pub fn get_rgb(&self) -> RGBColor {
         match self {
-            SeriesColor::Blue  => (31, 119, 180),
-            SeriesColor::Red   => (214, 39, 40),
-            SeriesColor::Green => (44, 160, 44),
-            SeriesColor::Black => (0, 0, 0),
+            SeriesColor::Blue  => RGBColor(31, 119, 180),
+            SeriesColor::Red   => RGBColor(214, 39, 40),
+            SeriesColor::Green => RGBColor(44, 160, 44),
+            SeriesColor::Black => RGBColor(0, 0, 0),
         }
     }
     /// Return an indexed color from the standard palette for a `SeriesColor`.
-    pub fn pick(index: usize) -> (u8, u8, u8) {
+    pub fn pick(index: usize) -> SeriesColor {
         match index {
-            0 => SeriesColor::Blue.get_rgb(),
-            1 => SeriesColor::Red.get_rgb(),
-            2 => SeriesColor::Green.get_rgb(),
-            _ => SeriesColor::Black.get_rgb(),
+            0 => SeriesColor::Blue,
+            1 => SeriesColor::Red,
+            2 => SeriesColor::Green,
+            _ => SeriesColor::Black,
         }
     }
 }
@@ -44,25 +47,22 @@ impl SeriesColor {
 #[derive(PartialEq, Clone)]
 pub enum PointType {
     CircleFilled,
-    SquareFilled,
     TriangleFilled,
     CircleOpen,
-    SquareOpen,
     TriangleOpen,
-    // discourage use of excessive point types...
+    Cross,
 }
 impl PointType {
-    // Return the accessible RGB color values for a `PointType`.
-    // pub fn get_rgb(&self) -> (u8, u8, u8) {
-    //     match self {
-    //         PointType::CircleFilled   => (31, 119, 180),
-    //         PointType::SquareFilled   => (214, 39, 40),
-    //         PointType::TriangleFilled => (44, 160, 44),
-    //         PointType::CircleOpen     => (31, 119, 180),
-    //         PointType::SquareOpen     => (214, 39, 40),
-    //         PointType::TriangleOpen   => (44, 160, 44),
-    //     }
-    // }
+    /// Return the filled boolean for a `PointType`.
+    pub fn get_filled(&self) -> bool {
+        match self {
+            PointType::CircleFilled   => true,
+            PointType::TriangleFilled => true,
+            PointType::CircleOpen     => false,
+            PointType::TriangleOpen   => false,
+            PointType::Cross          => false,
+        }
+    }
 }
 
 /// Description of one X-Y series to plot from a `DataFrame`.
@@ -77,7 +77,7 @@ pub struct PlotSeries {
     // these fields have robust defaults if not provided by the caller
     pub color: Option<SeriesColor>,
     pub point_type: PointType,
-    pub opacity: f32,
+    pub opacity: f64,
     pub point_border: bool,
     pub point_size_points: f32,
     pub line_width_points: f32,
@@ -128,7 +128,7 @@ impl PlotSeries {
         plot_as: SeriesType, 
         color: Option<SeriesColor>,
         point_type: PointType,
-        opacity: f32,
+        opacity: f64,
         point_border: bool,
         point_size_points: f32,
         line_width_points: f32

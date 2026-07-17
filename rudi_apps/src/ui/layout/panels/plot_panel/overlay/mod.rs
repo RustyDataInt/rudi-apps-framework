@@ -8,7 +8,7 @@ use super::*;
 
 // constants
 const CROSSHAIR_PIXEL_BASE64: &str = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYGDwDwAEhQEBAZ89LwAAAABJRU5ErkJggg==";
-const DEBOUNCE_DELAY_MS: u32 = 50;
+// const DEBOUNCE_DELAY_MS: u32 = 50;
 
 /// Place horizontal and vertical crosshairs on the plot
 /// between the img and the interactive overlay.
@@ -22,10 +22,6 @@ pub fn PlotPanelCrosshairs() -> Element {
 
             // move the crosshairs to the mouse position when the user moves the mouse over the overlay
             onmousemove: move |e| {
-                // spawn(async move {
-                //     async_delay(DEBOUNCE_DELAY_MS).await;
-                //     // delay_is_over.set(true);
-                // });
                 let coords = e.data.coordinates().element(); // (x, y)
                 if coords.x > 1.0 {
                     cursor_x.set((coords.x + 2.0) as u32);

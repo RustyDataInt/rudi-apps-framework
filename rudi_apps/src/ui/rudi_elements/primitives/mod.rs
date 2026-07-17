@@ -8,8 +8,8 @@ mod select_input;
 mod radio_group;
 
 // re-exports
-pub use numeric_input::NumericInput;
-pub use text_input::TextInput;
-pub use boolean_switch::BooleanSwitch;
-pub use select_input::SelectInput;
-pub use radio_group::RadioGroupInput;
+pub use numeric_input::*;
+pub use text_input::*;
+pub use boolean_switch::*;
+pub use select_input::*;
+pub use radio_group::*;

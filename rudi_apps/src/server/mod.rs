@@ -1,22 +1,21 @@
-//! The apps framework `server` module is generally only used 
-//! directly by a tool suite's shared/server `build.rs` and 
-//! `main.rs` at build time and runtime, respectively.
+//! The apps framework `server` module is generally only used directly by a tool 
+//! suite's shared/server `build.rs` and `main.rs` at build time and runtime, 
+//! respectively.
 //! 
-//! The `state::ServerState` and, less commonly, 
-//! `config::ServerConfig` objects are used indirectly in apps 
-//! by calling `use_context::<Signal<ServerState>>()` and
-//! `use_context::<ServerConfig>()`, respectively.
+//! The `state::ServerState` and, less commonly, `config::ServerConfig` objects 
+//! are used indirectly in apps by calling `use_context::<Signal<ServerState>>()` 
+//! and `use_context::<ServerConfig>()`, respectively.
 
 // RuDI developer note: script:
 //     `rudi-suite-template/apps/dioxus/shared/server/build.rs`
 // rarely changes even if updates are made to the shared builder:
 //     `rudi-apps-framework/rudi_apps/src/server/mod.rs::build()`
-// so `println!("cargo:rerun-if-changed=build.rs");` doesn't do much.
-// When working on changes to the shared `build()` function
-// it is best to touch this file when compiling:
+// so `println!("cargo:rerun-if-changed=build.rs");` doesn't do much. When 
+// working on changes to the shared `build()` function it is best to touch this 
+// file when compiling:
 //     `touch build.rs && dx build`
-// Changes to the user's config files are separately tracked to 
-// trigger builds, these comments only apply when updating `build()`.
+// Changes to the user's config files are separately tracked to trigger builds, 
+// these comments only apply when updating `build()`.
 
 // modules
 pub mod config;
@@ -43,9 +42,9 @@ pub static RUDI_LAYOUT_CSS:     Asset = asset!("/assets/rudi_apps_layout.css");
 pub static RUDI_FRAMEWORK_JS:   Asset = asset!("/assets/rudi_apps.js");
 pub static DX_COMPONENTS_THEME: Asset = asset!("/assets/dx-components-theme.css");
 
-/// Build app configurations for server `main.rs`. Called 
-/// by `build.rs` at compile time to read a tool suite's 
-/// set of supported apps via its TOML configuration files.
+/// Build app configurations for server `main.rs`. Called by `build.rs` at 
+/// compile time to read a tool suite's set of supported apps via its TOML 
+/// configuration files.
 pub fn build(cargo_manifest_dir: &str, out_dir: &str){
 
     // learn about the tool suite context
@@ -94,7 +93,11 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
                 println!("cargo:rerun-if-changed={}", app_config_file.display());
 
                 // add the app step components for each matchable app
-                writeln!(app_matcher_file, "    Some(app_name) if app_name == \"{}\" => rsx!{{", app_config.name.clone()).unwrap();
+                writeln!(
+                    app_matcher_file, 
+                    "    Some(app_name) if app_name == \"{}\" => rsx!{{", 
+                    app_config.name.clone()
+                ).unwrap();
                 add_app_step_match(
                     &mut app_matcher_file, 
                     &app_config.name, 
@@ -107,7 +110,8 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
                     if app_step_config.tooltip.is_none() {
                         app_step_config.tooltip = Some(app_step_config.title.clone());
                     }
-                    let app_step_instructions_file = app_dir.path().join(format!("src/{}/instructions.md", app_step_config.name));
+                    let app_step_instructions_file = app_dir.path()
+                        .join(format!("src/{}/instructions.md", app_step_config.name));
                     app_step_config.instructions = fs::read_to_string(&app_step_instructions_file).ok();
                     add_app_step_match(
                         &mut app_matcher_file, 
@@ -143,8 +147,8 @@ pub fn build(cargo_manifest_dir: &str, out_dir: &str){
     println!("cargo:rerun-if-changed=build.rs");
 }
 
-/// Add a match arm to the app_matcher for a single app step,
-/// including the app overview step.
+/// Add a match arm to the app_matcher for a single app step, including the app 
+/// overview step.
 fn add_app_step_match(
     app_matcher_file: &mut File, 
     app_name:         &str, 

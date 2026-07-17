@@ -7,6 +7,7 @@ use dioxus::prelude::*;
 use dioxus_icons::lucide::{ChevronUp, ChevronDown};
 use rlike::data_frame::prelude::*;
 use crate::ui::*;
+use crate::server::*;
 use super::*;
 
 // constants
@@ -72,12 +73,10 @@ impl TableConfig {
 
 /// Dioxus Properties for an `TablePanel`.
 #[derive(PartialEq, Clone, Props)]
-pub struct TablePanelProps<T> 
-where T: 'static + Clone + PartialEq + PartialOrd
-{
+pub struct TablePanelProps {
     // required
-    data:       Option<Signal<Vec<T>>>, // either `data` or `data_frame` is required
-    data_frame: Option<Signal<DataFrame>>,
+    data_vec:   Option<Resource<DataSource>>, // either `data` or `data_frame` is required
+    data_frame: Option<Resource<DataSource>>,
     config:     Signal<TableConfig>,
     // optional
     selected_rows: Option<Signal<Vec<usize>>>, // required if `select_mode` is not `None`
@@ -107,12 +106,30 @@ where T: 'static + Clone + PartialEq + PartialOrd
 /// `n_columns` and `min_width` are passed to the `FluidSpan` to control
 /// the size of the panel in the `FluidPage`.
 #[component]
-pub fn TablePanel<T>(props: TablePanelProps<T>) -> Element 
+pub fn TablePanel<T>(props: TablePanelProps) -> Element 
 where T: 'static + Clone + PartialEq + PartialOrd
 {
     let default_input_width = props.default_input_width
         .unwrap_or(InputWidth(DEFAULT_INPUT_WIDTH));
     use_context_provider(|| default_input_width);
+
+    let df = get_df::<T>(props.data_vec, props.data_frame, true);
+
+    let panel_contents = if let Some(df) = &*df.unwrap().read() {
+        rsx!{
+            div { class: "table-panel-contents",
+                TablePanelTable {
+                    data_frame: df.clone(),
+                    config: props.config,
+                    selected_rows: props.selected_rows,
+                }
+            }
+        }
+    } else {
+        rsx!{
+            div { class: "display-panel-error", "Waiting for data" }
+        }
+    };
 
     rsx!{
         DisplayPanel {
@@ -120,17 +137,7 @@ where T: 'static + Clone + PartialEq + PartialOrd
             title: props.title,
             n_columns: props.n_columns,
             min_width: props.min_width,
-            if let Some(df) = get_df(props.data, props.data_frame, true) {
-                div { class: "table-panel-contents",
-                    TablePanelTable {
-                        df,
-                        config: props.config,
-                        selected_rows: props.selected_rows,
-                    }
-                }
-            } else {
-                div { class: "display-panel-error", "Missing data!" }
-            }
+            {panel_contents}
         }
     }
 }
@@ -138,95 +145,109 @@ where T: 'static + Clone + PartialEq + PartialOrd
 /// Perform data processing and render the table. 
 #[component]
 pub fn TablePanelTable(
-    df:     Signal<DataFrame>, 
-    config: Signal<TableConfig>,
+    data_frame:    DataSource, 
+    config:        Signal<TableConfig>,
     selected_rows: Option<Signal<Vec<usize>>>,
 ) -> Element {
-    let current_config = config.read().clone();
-    let columns = current_config.columns.unwrap_or_else(|| df.read().col_names().clone() );
-    let columns = columns.iter().filter(|col| col != &&CALLER_INDEX_COL).cloned().collect::<Vec<String>>();
+    ServerData::with_data_source::<DataFrame, Element, _>(&data_frame, |df| {
+        let current_config = config.read().clone();
+        let columns = current_config.columns.unwrap_or_else(|| df.col_names().clone() );
+        let columns = columns.iter().filter(|col| col != &&CALLER_INDEX_COL).cloned().collect::<Vec<String>>();
 
-    // render the table header and handling sorting
-    let ths = columns.iter().map(|col| {
-        let col = col.clone();
-        let chevron = if current_config.major_sort == Some(col.clone()) {
-            if current_config.major_negate {
-                rsx!{
-                    ChevronDown { class: "table-major-sort", size: MAJOR_SORT_ICON_SIZE }
-                }
-            } else {
-                rsx!{
-                    ChevronUp { class: "table-major-sort", size: MAJOR_SORT_ICON_SIZE }
-                }
-            }
-        } else if current_config.minor_sort == Some(col.clone()) {
-            if current_config.minor_negate {
-                rsx!{
-                    ChevronDown { class: "table-minor-sort", size: MINOR_SORT_ICON_SIZE }
-                }
-            } else {
-                rsx!{
-                    ChevronUp { class: "table-minor-sort", size: MINOR_SORT_ICON_SIZE }
-                }
-            }
-        } else {
-            rsx!{}
-        };
-        rsx!{
-            th {
-                key: "{col}",
-                onclick: move |_| {
-                    let mut config = config.write();
-                    // let mut df = df.write();
-                    if config.major_sort == Some(col.clone()) {
-                        config.major_negate = !config.major_negate;
-                    } else {
-                        config.minor_sort = config.major_sort.take();
-                        config.minor_negate = config.major_negate;
-                        config.major_sort = Some(col.clone());
-                        config.major_negate = false;
-                    }
-                },
-                {col.clone()}
-                {chevron}
-            }
-        }
-    });
-    
-    // render the table rows and handle row selection
-    let trs = (0..df.read().n_row()).map(|i| { 
-        let caller_i: usize = df.read().cell(CALLER_INDEX_COL, i).unwrap();
-        let tds = columns.iter().map(|col| {
-            let value = df.read().cell_string(col, i);
-            rsx!{
-                td { key: "{col}-{caller_i}", {value} }
-            }
-        });
-        rsx!{
-            tr {
-                key: "row-{i}",
-                onclick: move |_| {
-                    let config = config.read();
-                    if let Some(selected_rows) = &mut selected_rows {
-                        if config.select_mode != TableSelectMode::None {
-                            if selected_rows.read().contains(&caller_i) {
-                                selected_rows.write().retain(|&i| i != caller_i);
-                            } else {
-                                selected_rows.write().push(caller_i);
-                            }
+        // render the table header and handling sorting
+        let ths = columns.iter().map(|col| {
+            let col = col.clone();
+            let chevron = if current_config.major_sort == Some(col.clone()) {
+                if current_config.major_negate {
+                    rsx!{
+                        ChevronDown {
+                            class: "table-major-sort",
+                            size: MAJOR_SORT_ICON_SIZE,
                         }
                     }
-                },
-                {tds}
+                } else {
+                    rsx!{
+                        ChevronUp {
+                            class: "table-major-sort",
+                            size: MAJOR_SORT_ICON_SIZE,
+                        }
+                    }
+                }
+            } else if current_config.minor_sort == Some(col.clone()) {
+                if current_config.minor_negate {
+                    rsx!{
+                        ChevronDown {
+                            class: "table-minor-sort",
+                            size: MINOR_SORT_ICON_SIZE,
+                        }
+                    }
+                } else {
+                    rsx!{
+                        ChevronUp {
+                            class: "table-minor-sort",
+                            size: MINOR_SORT_ICON_SIZE,
+                        }
+                    }
+                }
+            } else {
+                rsx!{}
+            };
+            rsx!{
+                th {
+                    key: "{col}",
+                    onclick: move |_| {
+                        let mut config = config.write();
+                        // let mut df = df.write();
+                        if config.major_sort == Some(col.clone()) {
+                            config.major_negate = !config.major_negate;
+                        } else {
+                            config.minor_sort = config.major_sort.take();
+                            config.minor_negate = config.major_negate;
+                            config.major_sort = Some(col.clone());
+                            config.major_negate = false;
+                        }
+                    },
+                    {col.clone()}
+                    {chevron}
+                }
             }
-        }
-    });
+        });
 
-    // assemble the final table
-    rsx!{
-        table { class: "table-panel-table",
-            tr { class: "table-panel-table-header", {ths} }
-            {trs}
-        }
-    }
+        // render the table rows and handle row selection
+        let trs = (0..df.n_row()).map(|i| { 
+            let caller_i: usize = df.cell(CALLER_INDEX_COL, i).unwrap();
+            let tds = columns.iter().map(|col| {
+                let value = df.cell_string(col, i);
+                rsx!{
+                    td { key: "{col}-{caller_i}", {value} }
+                }
+            });
+            rsx!{
+                tr {
+                    key: "row-{i}",
+                    onclick: move |_| {
+                        let config = config.read();
+                        if let Some(selected_rows) = &mut selected_rows {
+                            if config.select_mode != TableSelectMode::None {
+                                if selected_rows.read().contains(&caller_i) {
+                                    selected_rows.write().retain(|&i| i != caller_i);
+                                } else {
+                                    selected_rows.write().push(caller_i);
+                                }
+                            }
+                        }
+                    },
+                    {tds}
+                }
+            }
+        });
+
+        // assemble the final table
+        Ok(rsx!{
+            table { class: "table-panel-table",
+                tr { class: "table-panel-table-header", {ths} }
+                {trs}
+            }
+        })
+    }).expect("Failed when building table")
 }

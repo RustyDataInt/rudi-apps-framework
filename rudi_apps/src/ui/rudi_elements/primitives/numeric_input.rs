@@ -9,6 +9,20 @@ use dioxus::dioxus_core::IntoAttributeValue;
 use crate::components::{input::Input, label::Label};
 use crate::ui::*;
 
+/// A hook that returns the string name and signal for a `NumericInput` component.
+pub fn use_numeric_input<T>(this: &RudiElement, name: &str, default: T) -> (String, Signal<T>) 
+where T: 'static + 
+    Copy + 
+    PartialEq + PartialOrd + 
+    Serialize + DeserializeOwned + FromStr + 
+    IntoAttributeValue
+{
+    (   
+        name.to_string(), 
+        use_signal(|| this.get_initial_state(name, default))
+    )
+}
+
 /// Dioxus Properties for a `NumericInput`.
 #[derive(PartialEq, Clone, Props)]
 pub struct NumericProps<T> 

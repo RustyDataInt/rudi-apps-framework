@@ -298,6 +298,9 @@
 /* -----------------------------------------------------------------------------
    table panel tables
 ----------------------------------------------------------------------------- */
+.table-panel-contents {
+    overflow: auto;
+}
 .table-panel-table {
     outline: 1px solid var(--table-dark-grey);
     border-collapse: collapse;
